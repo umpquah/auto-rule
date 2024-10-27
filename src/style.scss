@@ -1,0 +1,12 @@
+$active-bg: #cec;
+$active-text: #363;
+$active-text-dark: #030;
+$active-outline: #7a7;
+$special-text: #003b5a;
+$corner-radius: 1rem;
+
+#app {
+    width: 400px;
+    padding: 1rem 0 0 0;
+    border: 1px solid $active-bg;
+}
