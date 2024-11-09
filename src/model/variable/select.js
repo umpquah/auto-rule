@@ -1,6 +1,7 @@
-import { Variable } from "./base";
+import VariableBase from "./variable-base";
 
-export class Select extends Variable {
+export default class Select extends VariableBase {
+    static typeKeyword = "select";
     static validators = [
         [(spec) => Array.isArray(spec) && spec.length > 0, "must be a non-empty array"],
     ];

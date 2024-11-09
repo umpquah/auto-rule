@@ -1,6 +1,7 @@
-import { Variable } from "./base";
+import VariableBase from "./variable-base";
 
-export class Range extends Variable {
+export default class Range extends VariableBase {
+    static typeKeyword = "range";
     static validators = [
         [(spec) => Array.isArray(spec) && spec.length === 2, "must be two-element array"],
         [([min, max]) => Number.isInteger(min) && Number.isInteger(max), "endpoints must be integers"],

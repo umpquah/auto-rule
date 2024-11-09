@@ -1,6 +1,7 @@
-import { Variable } from "./base";
+import VariableBase from "./variable-base";
 
-export class Chance extends Variable {
+export default class Chance extends VariableBase {
+    static typeKeyword = "chance";
     static validators = [
         [(spec) => (typeof spec === "number"), "must be a number"],
         [(spec) => (spec >= 0 && spec <= 1), "must be between 0 and 1"],
