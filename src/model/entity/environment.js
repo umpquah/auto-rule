@@ -1,4 +1,4 @@
-import Variable from "../variable";
+import VariableBuilder from "../variable";
 import AppError from "../app-error";
 
 export default class Environment {
@@ -35,7 +35,7 @@ export default class Environment {
         let newBindings = {}
         Object.entries(groupSpec).forEach(([name, spec]) => {
             this._validateName(parent, name);
-            newBindings[name] = new Variable(parent, name, spec);
+            newBindings[name] = new VariableBuilder(parent, name, spec);
         });
         Object.assign(this.bindings, newBindings);
         return newBindings;

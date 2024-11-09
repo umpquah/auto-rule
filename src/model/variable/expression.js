@@ -1,4 +1,4 @@
-import VariableBase from "./variable-base";
+import VariableBase from "./base";
 
 export default class Expression extends VariableBase {
     static typeKeyword = "expr";

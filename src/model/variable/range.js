@@ -1,4 +1,4 @@
-import VariableBase from "./variable-base";
+import VariableBase from "./base";
 
 export default class Range extends VariableBase {
     static typeKeyword = "range";

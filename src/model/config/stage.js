@@ -1,14 +1,16 @@
-import { ConfigBase } from "./base";
-import Variable from "../variable";
 import { pick } from "lodash";
-
-const BASIC_KEYS = ["title", "description", "preamble"];
-const PARAMETERS_KEY = "parameters";
-const RESOLUTION_KEY = "resolution";
+import ConfigBase from "./base";
+import { Basics, Parameters, Resolution } from "./blocks";
 
 export class Stage extends ConfigBase {
-    static optionalProps = ["description", "preamble", "parameters"];
-    static requiredProps = ["title", "resolution"];
+    static optionalProperties = [
+        ...Basics.optionalProperties,
+        "parameters",
+    ];
+    static requiredProperties = [
+        ...Basics.requiredProperties,
+        "resolution",
+    ]
 
     constructor(parent, name, spec) {
         // Stages have separate environments, names are
@@ -17,19 +19,24 @@ export class Stage extends ConfigBase {
     }
 
     _loadSpec(spec) {
-        this.props = {};
-        this.environment.add(this, pick(spec, BASIC_KEYS));
+        this.props = { resolution: {} };
+        this.parameters = new Parameters(this, spec.parameters);
+        this.basics = new Basics(this, pick(spec, Basics.allProperties));
+        this.resolution = new Resolution(this, spec.resolution);
     }
 
-    _updateBasicProps() {
-        BASIC_KEYS.forEach((key) => {
+    _updateProps() {
+        Basics.allProperties.forEach((key) => {
             this.props[key] = this.environment.bindings[key]?.value;
+        });
+        Resolution.allProperties.forEach((key) => {
+            this.props.resolution[key] = this.environment.bindings[key]?.value
         });
     }
 
     refresh() {
         this.environment.refresh();
-        this._updateBasicProps();
+        this._updateProps();
     }
 
 }

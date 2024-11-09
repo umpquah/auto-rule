@@ -2,23 +2,28 @@
 import Entity from "../entity";
 import AppError from "../app-error";
 
-export class ConfigBase extends Entity {
-    static requiredProps = [];
-    static optionalProps = [];
+export default class ConfigBase extends Entity {
+    static requiredProperties = [];
+    static optionalProperties = [];
+
+    static get allProperties() {
+        return [
+            ...this.requiredProperties,
+            ...this.optionalProperties
+        ];
+    }
 
     _validateSpec(spec) {
-        const {requiredProps, optionalProps} = this.constructor;
-        const allProps = [...requiredProps, ...optionalProps];
-        if (allProps.length === 0)
+        const { allProperties, requiredProperties } = this.constructor;
+        if (allProperties.length === 0)
             return;
-        requiredProps.forEach((prop) => {
+        requiredProperties.forEach((prop) => {
             if (!(prop in spec))
                 throw new AppError("Config", `${this.key}: Missing required '${prop}' entry`);
         });
         for (const prop in spec) {
-            if (!allProps.includes(prop)) {
-                const where = this.key ? `within ${this.key}` : "at top level";
-                throw new AppError("Config", `'${prop}' entry not allowed ${where}`);
+            if (!allProperties.includes(prop)) {
+                throw new AppError("Config", `'${prop}' entry not allowed within ${this.key}`);
             }
         } 
         super._validateSpec(spec);

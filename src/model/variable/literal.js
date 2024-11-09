@@ -1,4 +1,4 @@
-import VariableBase from "./variable-base";
+import VariableBase from "./base";
 
 export default class Literal extends VariableBase {
     static typeKeyword = "literal";

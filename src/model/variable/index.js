@@ -1,1 +1,1 @@
-export { Variable as default } from "./builder";
+export { VariableBuilder as default } from "./builder";

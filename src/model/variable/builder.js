@@ -34,7 +34,7 @@ class TypedBuilder {
     }
 }
 
-export class Variable {
+export class VariableBuilder {
     constructor(parent, name, spec) {
         if (spec === undefined) {
             return undefined;

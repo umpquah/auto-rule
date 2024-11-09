@@ -5,53 +5,56 @@ import Entity from "../model/entity";
 import '../style.scss';
 
 /* eslint-disable no-template-curly-in-string */
-const parameters = [
-    {
-        timeUnit: "minute",
-        secondsMultiplier: 60,
-        room: { select: ["bedroom", "parlor", "study", "den", "cabin"] },
-    },
-    {
-        time: { range: [1, 3] },
-        hideTime: { chance: 0.2 },
-    },
-    {
-        seconds: { expr: "time * secondsMultiplier" },
-    },
-    {
-        foo: { chance: 0.5 },
-        count: { range: [1, 4] },
-        food: { select: ["cake", "pie", "brownie"] },
-        color: "blue",
-        answer: 42,
-    },
-    {
-        result1: { expr: "answer * count" },
-        result2: { expr: "`${answer * count} ${food}s`" },
-        result3: { stringExpr: "${answer * count} ${food}s" },
-    },
-];
-const resolution = {
-    announce: { expr: "hideTime ? 'Wait for a while...' : `Wait ${seconds}s...`" },
-    wait: { expr: "seconds" },
-    timerHidden: { expr: "hideTime" },
-    next: "wait",
-};
+// const parameters = [
+//     {
+//         timeUnit: "minute",
+//         secondsMultiplier: 60,
+//         room: { select: ["bedroom", "parlor", "study", "den", "cabin"] },
+//     },
+//     {
+//         time: { range: [1, 3] },
+//         hideTime: { chance: 0.2 },
+//     },
+//     {
+//         seconds: { expr: "time * secondsMultiplier" },
+//     },
+//     {
+//         foo: { chance: 0.5 },
+//         count: { range: [1, 4] },
+//         food: { select: ["cake", "pie", "brownie"] },
+//         color: "blue",
+//         answer: 42,
+//     },
+//     {
+//         result1: { expr: "answer * count" },
+//         result2: { expr: "`${answer * count} ${food}s`" },
+//         result3: { stringExpr: "${answer * count} ${food}s" },
+//     },
+// ];
 const globalSpecs = {
     room: { select: ["bedroom", "parlor", "study", "den", "cabin"] },
     scoops: { range: [1, 10] }
 };
 const stageSpecs = [
     {
-        title: "Stage A",
-        description: { stringExpr: "A tale of ${3 + 4} ducks "},
-        resolution: {},
+        parameters: {
+            ducks: { range: [10, 20] },
+            isBig: { chance: 0.5 },
+        },
+        title: { expr: "isBig ? 'BIG pond' : 'little pond'" },
+        description: { stringExpr: "A tale of ${ducks} ducks"},
+        resolution: {
+            next: "foo",
+            announce: { stringExpr: "Pet the ${ducks} ducks!" },
+        },
     },
     {
         title: { stringExpr: "Desert in the ${room}" },
         description: { stringExpr: "${scoops} ice cream scoops" },
         preamble: "One upon a time",
-        resolution: {},
+        resolution: {
+            next: "bar",
+        },
     }
 ];
 
