@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Container, /* Tab, Tabs */ } from "react-bootstrap";
 import { Stage } from "../model";
 import Entity from "../model/entity";
@@ -33,25 +33,30 @@ import '../style.scss';
 // ];
 const globalSpecs = {
     room: { select: ["bedroom", "parlor", "study", "den", "cabin"] },
-    scoops: { range: [1, 10] }
 };
 const stageSpecs = [
     {
         parameters: {
-            ducks: { range: [10, 20] },
+            ducks: { range: [10, 20],  },
             isBig: { chance: 0.5 },
         },
         title: { expr: "isBig ? 'BIG pond' : 'little pond'" },
-        description: { stringExpr: "A tale of ${ducks} ducks"},
+        description: { exprString: "A tale of ${ducks} ducks"},
         resolution: {
             next: "foo",
-            announce: { stringExpr: "Pet the ${ducks} ducks!" },
+            announce: { exprString: "Pet the ${ducks} ducks!" },
         },
     },
     {
-        title: { stringExpr: "Desert in the ${room}" },
-        description: { stringExpr: "${scoops} ice cream scoops" },
-        preamble: "One upon a time",
+        parameters: [
+            {
+                mice: { range: [0, 3], units: ["mouse", "mice"] },
+                scoops: { range: [1, 2], units: ["ice cream scoop"] },
+            },
+        ],
+        title: { exprString: "Desert in the ${room}" },
+        description: { exprString: "${scoops$display}" },
+        preamble: { exprString: "You have ${mice$display}" },
         resolution: {
             next: "bar",
         },
@@ -60,6 +65,8 @@ const stageSpecs = [
 
 
 function App() {
+
+    const [stages, setStages] = useState([]);
 
     useEffect(() => {
         try {
@@ -75,24 +82,23 @@ function App() {
             // Object.keys(resolution).forEach((key) => {
             //     console.log(environment.bindings[key].value);
             // });
+            setStages([]);
             const outer = new Entity();
             outer.environment.add(outer, globalSpecs);
             stageSpecs.forEach((stageSpec, i) => {
                 const stage = new Stage(outer, `stage${i}`, stageSpec);
-                for (let i = 0; i < 5; i++) {
-                    stage.refresh();
-                    console.log(stage.props);
-                    console.log();
-                }
+                setStages((prev) => [...prev, stage.props]);
             });
         } catch (err) {
-            console.error("*** ERROR:", err)
+            console.error(`*** ERROR: ${err.key}: ${err.message}`);
         }
     }, []);
 
     return (
         <Container id="app">
-            [Placeholder - working on model currently]
+            <pre>
+                {JSON.stringify(stages, null, 2)}
+            </pre>
         </Container>
     )
 }

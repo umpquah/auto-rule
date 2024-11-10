@@ -12,12 +12,12 @@ export default class Entity {
             this._keyPath.push(name)
         }
         if (!parent) {
-            console.debug(`[ENTITY] ${this.key}: environment created `);
+            // console.debug(`[ENTITY] ${this.key}: environment created `);
             this.environment = new Environment();
         }
         else {
             const phrase = forkEnvironment ? "forked from" : "shared from";
-            console.debug(`[ENTITY] ${this.key}: environment ${phrase} ${parent.key}`);
+            // console.debug(`[ENTITY] ${this.key}: environment ${phrase} ${parent.key}`);
             const environment = parent.environment;
             this.environment = forkEnvironment ? environment.fork() : environment;
         }

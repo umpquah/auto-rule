@@ -1,17 +1,19 @@
-import VariableBuilder from "../variable";
+import { assign, keys, isEmpty, omit, values } from "lodash";
 import AppError from "../app-error";
+import VariableBuilder from "../variable";
+
 
 export default class Environment {
-    constructor() {
-        this.bindings = {};
+    constructor(bindings = {}) {
+        this.bindings = bindings;
     }
 
     get names() {
-        return Object.keys(this.bindings);
+        return keys(this.bindings);
     }
 
     get variables() {
-        return Object.values(this.bindings);
+        return values(this.bindings);
     }
 
     fork() {
@@ -31,14 +33,42 @@ export default class Environment {
         }
     }
 
+    static _splitSpec(name, spec) {
+        let variableSpec = spec;
+        let unitsSpec, exprWithUnitsSpec;
+        if (typeof spec === "object") {
+            unitsSpec = spec["units"];
+            variableSpec = omit(spec, "units");
+        }
+        if (unitsSpec) {
+            if (!Array.isArray(unitsSpec) || unitsSpec.length < 1 || unitsSpec.length > 2) {
+                throw new AppError("Validation", "must specify array of 1 or 2 unit names");
+            }
+            const withUnitsName = `${name}$display`;
+            exprWithUnitsSpec = { 
+                [withUnitsName]: { exprWithUnits: [name, ...unitsSpec] } 
+            };
+        }
+        return [variableSpec, exprWithUnitsSpec];
+    }
+
     _addGroup(parent, groupSpec) {
-        let newBindings = {}
+        let groupBindings = {};
+        let additionalSpecs = {};
         Object.entries(groupSpec).forEach(([name, spec]) => {
             this._validateName(parent, name);
-            newBindings[name] = new VariableBuilder(parent, name, spec);
+            const [variableSpec, exprWithUnitsSpec] = Environment._splitSpec(name, spec);
+            groupBindings[name] = new VariableBuilder(parent, name, variableSpec);
+            if (exprWithUnitsSpec) {
+                assign(additionalSpecs, exprWithUnitsSpec);
+            }
         });
-        Object.assign(this.bindings, newBindings);
-        return newBindings;
+        assign(this.bindings, groupBindings);
+        if (!isEmpty(additionalSpecs)) {
+            const additionalBindings = this._addGroup(parent, additionalSpecs);
+            assign(this.bindings, additionalBindings);
+        }
+        return groupBindings;
     }
 
     _addGroupList(parent, groupListSpec) {

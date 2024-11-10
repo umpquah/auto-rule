@@ -22,5 +22,4 @@ export default class VariableBase extends Entity {
     toString() {
         return `[${this.name}: ${JSON.stringify(this.value)}]`;
     }
-
 };

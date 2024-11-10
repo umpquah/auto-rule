@@ -15,8 +15,11 @@ const DEFAULT_SETTINGS = {
             preamble: "This is a preamble'",
             variables: [
                 { 
-                    time: { range: [1, 3] },
+                    time: { range: [1, 3], units: ["sec", "secs"] },
                     hideTime: { chance: 0.2 },
+                },
+                { 
+                    time_disp: { exprWithUnits: ["time", "sec", "secs"] }
                 },
                 { 
                     seconds: { expr: "time * secondsMultiplier" },

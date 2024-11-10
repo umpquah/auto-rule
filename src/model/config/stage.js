@@ -16,6 +16,7 @@ export class Stage extends ConfigBase {
         // Stages have separate environments, names are
         // reusable unless in global parameters
         super(parent, name, spec, true);
+        this.refresh();
     }
 
     _loadSpec(spec) {

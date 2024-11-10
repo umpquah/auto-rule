@@ -1,7 +1,7 @@
 import Expression from "./expression";
 
-export default class StringExpression extends Expression {
-    static typeKeyword = "stringExpr";
+export default class ExpressionString extends Expression {
+    static typeKeyword = "exprString";
     
     constructor(parent, name, spec) {
         super(parent, name, "`" + spec + "`");
