@@ -13,8 +13,7 @@ export class Stage extends ConfigBase {
     ]
 
     constructor(parent, name, spec) {
-        // Stages have separate environments, names are
-        // reusable unless in global parameters
+        // Stages have independent scopes for names
         super(parent, name, spec, true);
         this.refresh();
     }

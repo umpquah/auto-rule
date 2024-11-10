@@ -1,6 +1,6 @@
 import { assign, keys, isEmpty, omit, values } from "lodash";
 import AppError from "../app-error";
-import VariableBuilder from "../variable";
+import { VariableBuilder } from "../variable/builder";
 
 
 export default class Environment {
@@ -58,7 +58,7 @@ export default class Environment {
         Object.entries(groupSpec).forEach(([name, spec]) => {
             this._validateName(parent, name);
             const [variableSpec, exprWithUnitsSpec] = Environment._splitSpec(name, spec);
-            groupBindings[name] = new VariableBuilder(parent, name, variableSpec);
+            // groupBindings[name] = new VariableBuilder(parent, name, variableSpec);
             if (exprWithUnitsSpec) {
                 assign(additionalSpecs, exprWithUnitsSpec);
             }

@@ -5,7 +5,7 @@ export default class VariableBase extends Entity {
 
     constructor(parent, name, spec) {
         super(parent, name, spec);
-        console.debug(`[VARIABLE] ${this.key} created`);
+        console.debug(`${this.key} created`);
         this.refresh();
     }
 

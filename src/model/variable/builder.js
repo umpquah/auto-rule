@@ -6,7 +6,7 @@ import Range from "./range";
 import Select from "./select";
 import AppError from "../app-error";
 
-const TYPES = [Chance, Expression, ExpressionString, ExpressionWithUnits, Literal, Range, Select, ];
+const TYPES = [Chance, Expression, ExpressionString, ExpressionWithUnits, Literal, Range, Select];
 const KEYWORD_TO_TYPE = Object.assign(
     {},
     ...TYPES.map(
