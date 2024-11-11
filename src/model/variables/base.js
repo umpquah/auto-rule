@@ -14,6 +14,8 @@ export default class VariableBase extends Entity {
     }
     
     refresh() { }
+
+    addedToEnvironment() { }
     
     get value() {
         return this._value;

@@ -1,1 +1,1 @@
-export { Stage } from "./stage";
+export { default as StageManager } from "./stage-manager";

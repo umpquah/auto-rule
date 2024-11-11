@@ -4,20 +4,24 @@ import Environment from "./environment";
 export default class Entity {
     static validators = [];
 
-    constructor(parent, name, spec, forkEnvironment = false) {
+    constructor(
+        parent,
+        name,
+        spec, 
+        { forkEnvironment = false, intermediateKey = "" } = {},
+    ) {
         this.name = name;
         const parentKeys = parent?._keyPath ?? [];
         this._keyPath = [...parentKeys];
+        if (intermediateKey)
+            this._keyPath.push(intermediateKey);
         if (name) {
             this._keyPath.push(name)
         }
         if (!parent) {
-            // console.debug(`[ENTITY] ${this.key}: environment created `);
             this.environment = new Environment();
         }
         else {
-            const phrase = forkEnvironment ? "forked from" : "shared from";
-            // console.debug(`[ENTITY] ${this.key}: environment ${phrase} ${parent.key}`);
             const environment = parent.environment;
             this.environment = forkEnvironment ? environment.fork() : environment;
         }
@@ -36,7 +40,7 @@ export default class Entity {
     _validateSpec(spec) {
         this.constructor.validators.forEach(([validator, errorMessage]) => {
             if (!validator(spec))
-                throw new AppError("Validation", errorMessage, this.key);
+                throw new AppError("Specification", errorMessage, this.key);
         });
     }
 

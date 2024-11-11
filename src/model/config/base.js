@@ -19,11 +19,11 @@ export default class ConfigBase extends Entity {
             return;
         requiredProperties.forEach((prop) => {
             if (!(prop in spec))
-                throw new AppError("Config", `${this.key}: Missing required '${prop}' entry`);
+                throw new AppError("Specification", `missing required '${prop}' entry`, this.key);
         });
         for (const prop in spec) {
             if (!allProperties.includes(prop)) {
-                throw new AppError("Config", `'${prop}' entry not allowed within ${this.key}`);
+                throw new AppError("Specification", `'${prop}' entry not allowed here`, this.key);
             }
         } 
         super._validateSpec(spec);

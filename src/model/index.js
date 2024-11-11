@@ -1,1 +1,1 @@
-export { Stage } from "./config";
+export { StageManager } from "./config";

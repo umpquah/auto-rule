@@ -8,11 +8,15 @@ export default class Expression extends VariableBase {
     ];
 
     _loadSpec(spec) {
+        this.expr = spec;
+    }
+
+    addedToEnvironment() { 
         // shallow copy from bindings so only prior declarations are visible
         this.bindings = {...this.environment.bindings };
         this.names = keys(this.bindings);
         /* eslint-disable-next-line no-new-func */
-        this._fn = new Function(...this.names, "return " + spec + ";"); 
+        this._fn = new Function(...this.names, "return " + this.expr + ";"); 
     }
 
     get value() {

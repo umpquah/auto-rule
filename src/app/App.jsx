@@ -1,71 +1,29 @@
-import { useEffect, useState } from "react";
-import { Container, /* Tab, Tabs */ } from "react-bootstrap";
-import { Stage } from "../model";
-import Entity from "../model/entity";
-
+import { useState } from "react";
+import { Container, Tab, Tabs } from "react-bootstrap";
+import { DEFAULT_SETTINGS_JSON } from "../settings/defaults";
+import Game from "./Game";
+import ConfigPanel from "./ConfigPanel"
+import Message from "../components/message";
 import '../style.scss';
 
 
-const globalSpecs = {
-    room: { select: ["bedroom", "parlor", "study", "den", "cabin"] },
-};
-const stageSpecs = [
-    {
-        parameters: {
-            ducks: { range: [10, 20],  },
-            isBig: { chance: 0.5 },
-        },
-        title: { expr: "isBig ? 'BIG pond' : 'little pond'" },
-        description: { exprString: "A tale of ${ducks} ducks"},
-        resolution: {
-            next: "foo",
-            announce: { exprString: "Pet the ${ducks} ducks!" },
-        },
-    },
-    {
-        parameters: [
-            {
-                mice: { range: [0, 3], units: ["mouse", "mice"] },
-                scoops: { range: [1, 2], units: ["ice cream scoop"] },
-            },
-        ],
-        title: { exprString: "Desert in the ${room}" },
-        description: { exprString: "${scoops$display}" },
-        preamble: { exprString: "You have ${mice$display}" },
-        resolution: {
-            next: "bar",
-        },
-    }
-];
-
-
-function App() {
-
-    const [stages, setStages] = useState([]);
-
-    useEffect(() => {
-        try {
-            setStages([]);
-            const outer = new Entity();
-            outer.environment.add(outer, globalSpecs);
-            stageSpecs.forEach((stageSpec, i) => {
-                const stage = new Stage(outer, `stage${i}`, stageSpec);
-                setStages((prev) => [...prev, stage.props]);
-            });
-        } catch (err) {
-            console.error(`*** ERROR: ${err.key}: ${err.message}`);
-        }
-    }, []);
-
+const App = ({
+    settings = DEFAULT_SETTINGS_JSON
+}) => {
+    const [error, setError] = useState(null);
     return (
-        <Container id="app">
-            <pre>
-                {JSON.stringify(stages, null, 2)}
-            </pre>
+        <Container id="main">
+            <Message {...error} isError={true} />
+            <Tabs fill defaultActiveKey="game">
+                <Tab eventKey="game" title="Game">
+                    <Game settings={settings} setError={setError} />
+                </Tab>
+                <Tab eventKey="config-panel" title="Config">
+                    <ConfigPanel setError={setError} />
+                </Tab>
+            </Tabs>
         </Container>
-    )
+    );
 }
 
 export default App;
-
-

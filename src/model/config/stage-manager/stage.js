@@ -1,8 +1,8 @@
 import { pick } from "lodash";
-import ConfigBase from "./base";
-import { Basics, Parameters, Resolution } from "./blocks";
+import ConfigBase from "../base";
+import { Basics, Parameters, Resolution } from "../blocks";
 
-export class Stage extends ConfigBase {
+export default class Stage extends ConfigBase {
     static optionalProperties = [
         ...Basics.optionalProperties,
         "parameters",
@@ -12,14 +12,14 @@ export class Stage extends ConfigBase {
         "resolution",
     ]
 
-    constructor(parent, name, spec) {
+    constructor(parent, name, spec, options) {
         // Stages have independent scopes for names
-        super(parent, name, spec, true);
+        super(parent, name, spec, { forkEnvironment: true, ...options });
         this.refresh();
     }
 
     _loadSpec(spec) {
-        this.props = { resolution: {} };
+        this.props = { key: this.key, resolution: {} };
         this.parameters = new Parameters(this, spec.parameters);
         this.basics = new Basics(this, pick(spec, Basics.allProperties));
         this.resolution = new Resolution(this, spec.resolution);
@@ -37,6 +37,7 @@ export class Stage extends ConfigBase {
     refresh() {
         this.environment.refresh();
         this._updateProps();
+        return this.props;
     }
 
 }
