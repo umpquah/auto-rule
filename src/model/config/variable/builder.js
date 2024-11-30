@@ -1,10 +1,12 @@
 import { assign, entries, isEmpty, keys, omit } from "lodash";
+
+import AppError from "../../error";
+
 import Chance from "./chance";
 import { Expression, ExpressionString, ExpressionWithUnits } from "./expression";
 import Literal from "./literal";
 import Range from "./range";
 import Select from "./select";
-import AppError from "../app-error";
 
 const TYPES = [Chance, Expression, ExpressionString, ExpressionWithUnits, Literal, Range, Select];
 const KEYWORD_TO_TYPE = Object.assign(
@@ -14,37 +16,41 @@ const KEYWORD_TO_TYPE = Object.assign(
     )
 );
 
-export default class Variables {
-    static buildSimple(parent, name, spec) {
+export default class VariableBuilder {
+    static _buildSimple(parent, name, spec) {
         return new Literal(parent, name, spec);
     }
 
-    static buildTyped(parent, name, spec) {
+    static _buildTyped(parent, name, spec) {
         const types = keys(spec);
         if (types.length !== 1)
-            throw new AppError("Specification", `${parent.key}: ${name} must specify exactly one type`, parent.key);
+            throw new AppError(
+                parent.key, `${name} must specify exactly one type`, "Internal"
+            );
         const typeKeyword = types[0];
         const variableType = KEYWORD_TO_TYPE[typeKeyword];
         if (!variableType)
-            throw new AppError("Specification", `${parent.key}: ${name} has invalid type '${typeKeyword}'`, parent.key);
+            throw new AppError(
+                parent.key, `${name} has invalid type '${typeKeyword}'`,  "Internal"
+            );
         return new variableType(parent, name, spec[typeKeyword]);
     }
 
-    static buildFromSpecList(parent, specList) {
+    static _buildFromSpecList(parent, specList) {
         let result = [];
         specList.forEach((specGroup) => {
-            const innerResult = Variables.buildFromSpecGroup(parent, specGroup);
+            const innerResult = this._buildFromSpecGroup(parent, specGroup);
             result = result.concat(innerResult);
         });
         return result;
     }
 
-    static buildFromSpecGroup(parent, specGroup) {
+    static _buildFromSpecGroup(parent, specGroup) {
         let result = {};
         let additionalSpecs = {};
         entries(specGroup).forEach(([name, spec]) => {
             const [variableSpec, exprWithUnitsSpec] = _splitSpec(parent, name, spec);
-            const builder = (typeof variableSpec === "object") ? this.buildTyped : this.buildSimple;
+            const builder = (typeof variableSpec === "object") ? this._buildTyped : this._buildSimple;
             result[name] = builder(parent, name, variableSpec);
             if (exprWithUnitsSpec) {
                 assign(additionalSpecs, exprWithUnitsSpec);
@@ -53,19 +59,21 @@ export default class Variables {
         if (isEmpty(additionalSpecs)) {
             return [result];
         } else {
-            const exprWithUnitsGroup = this.buildFromSpecGroup(parent, additionalSpecs);
+            const exprWithUnitsGroup = this._buildFromSpecGroup(parent, additionalSpecs);
             return [result, ...exprWithUnitsGroup];
         }
     }
 
-    static buildFromSpecs(parent, specs) {
+    static fromSpecs(parent, specs) {
         if (Array.isArray(specs)) {
-            return Variables.buildFromSpecList(parent, specs);
+            return this._buildFromSpecList(parent, specs);
         }
         else if (typeof specs === "object") {
-            return Variables.buildFromSpecGroup(parent, specs);
+            return this._buildFromSpecGroup(parent, specs);
         } else {
-            throw new AppError("Programming", "Variables.buildFromSpecs() requires array or object");
+            throw new AppError(
+                this.key, "Variable.buildFromSpecs() requires array or object", "Internal"
+            );
         }
     }
 }

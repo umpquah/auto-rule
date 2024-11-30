@@ -11,6 +11,7 @@ const DEFAULT_SETTINGS = {
         wait: {
             title: "Waiting",
             description: { expr: "`Step into the ${room}.`" },
+            // preamble: { content: "This is a preamble.", confirm: "Okey Dokey!" },
             preamble: "This is a preamble.",
             parameters: [
                 { 
@@ -23,8 +24,8 @@ const DEFAULT_SETTINGS = {
             ],
             resolution: {
                 announce: { expr: "hide ? 'Wait for a while...' : `Wait ${time$display}...`" },
+                // wait: { duration: { expr: "seconds" }, hidden: false },
                 wait: { expr: "seconds" },
-                hideTime: { expr: "hide" },
                 next: "decide",
             },
         },
@@ -40,7 +41,7 @@ const DEFAULT_SETTINGS = {
                 }
             ],
             resolution: {
-                announce: "`You will get a [${outcome}].`",
+                announce: { exprString: "You will get a [${outcome}]." },
                 next: { expr: "outcome" },
             }
         },
@@ -52,11 +53,13 @@ const DEFAULT_SETTINGS = {
                 count: { range: [1, 3], units: ["scoop"] },
             },
             preamble: "Ready for a reward?",
-            preambleConfirm: "Ready!",
             resolution: {
                 announce: { exprString: "You may ${verb} [${count$display} of ${item}]." },
+                // action: { 
+                //     content: { exprString: "${capitalize(verb)} your ${item} before continuing." },
+                //     confirm: "Yum! (Done.)"
+                // },
                 action: { exprString: "${capitalize(verb)} your ${item} before continuing." },
-                actionConfirm: "Yum! (Done.)",
                 next: "wait",
             },
         },

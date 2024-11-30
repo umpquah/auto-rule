@@ -1,6 +1,12 @@
 import { assign, entries, keys, values } from "lodash";
-import AppError from "../app-error";
+import AppError from "./error";
 
+
+/**
+ * Generic environment that tracks binding of names to objects,
+ * providing a "fork" functionality to spin off a new environment
+ * from an old one and basic validation.
+ */
 export default class Environment {
     constructor(bindings = {}) {
         this.bindings = bindings;
@@ -10,7 +16,7 @@ export default class Environment {
         return keys(this.bindings);
     }
 
-    get variables() {
+    get objects() {
         return values(this.bindings);
     }
 
@@ -19,26 +25,26 @@ export default class Environment {
     }
 
     _validateName(parent, name) {
+        // TODO: Check against reserved words also
         const previous = this.bindings[name];
         if (previous) {
             throw new AppError(
-                "Name",
-                `'${name}' already declared as ${previous.key}`,
-                parent.key,
+                parent.key, `'${name}' already declared as ${previous.key}`, "Naming"
             );
         }
     }
 
     add(parent, groupList) {
         if (!Array.isArray(groupList))
-            throw new AppError("Programming", "Environment.add() requires array");
+            throw new AppError("Internal", "Environment.add() requires array");
         let addedBindings = {};
-        groupList.forEach((variableGroup) => {
+        groupList.forEach((group) => {
             let groupBindings = {};
-            entries(variableGroup).forEach(([name, variable]) => {
+            entries(group).forEach(([name, object]) => {
                 this._validateName(parent, name);
-                groupBindings[name] = variable;
-                variable.addedToEnvironment();
+                groupBindings[name] = object;
+                if (object.wasAddedToEnvironment)
+                    object.wasAddedToEnvironment(this);
             });
             assign(this.bindings, groupBindings);
             assign(addedBindings, groupBindings);
@@ -46,7 +52,7 @@ export default class Environment {
         return addedBindings;
     }
 
-    refresh() {
-        this.variables.forEach((variable) => { variable.refresh() });
+    applyToAll(methodName, ...args) {
+        this.objects.forEach((object) => object[methodName](...args));
     }
 }

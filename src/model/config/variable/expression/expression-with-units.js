@@ -4,11 +4,8 @@ export default class ExpressionWithUnits extends Expression {
     static typeKeyword = "exprWithUnits";
 
     static validators = [
-        [(spec) => Array.isArray(spec), "must be an array"],
-        [
-            (spec) => spec.length === 2 || spec.length === 3,
-            "must specify expression, unit, [plural unit]",
-        ],
+        (spec) => Array.isArray(spec) || "must be an array",
+        (spec) => spec.length === 2 || spec.length === 3 || "must specify expression, unit, [plural unit]",
     ];
 
     _loadSpec(spec) {

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Container, /* Tab, Tabs */ } from "react-bootstrap";
-import { StageManager } from "../model";
+
+import { AppError, StageManager } from "../model";
+import { DEFAULT_SETTINGS_JSON } from "./settings";
+
 import Stage from "../components/stage";
-import { DEFAULT_SETTINGS_JSON } from "../settings";
-import AppError from "../model/app-error";
 import '../style.scss';
 
 function Game() {
@@ -11,6 +12,10 @@ function Game() {
 
     const handleActionDone = () => {
         console.log("ACTION DONE");
+    }
+
+    const handleTimerDone = () => {
+        console.log("TIMER DONE");
     }
 
     useEffect(() => {
@@ -30,7 +35,12 @@ function Game() {
     return (
         <Container id="app">
             {stages.map(({key, ...props}) => (
-                <Stage key={key} whenActionDone={handleActionDone} {...props} />
+                <Stage 
+                    key={key}
+                    whenActionDone={handleActionDone}
+                    whenTimerDone={handleTimerDone}
+                    {...props} 
+                />
             ))}
         </Container>
     )

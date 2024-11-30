@@ -18,5 +18,3 @@ const Message = ({ header, body, isError }) => {
 };
 
 export default Message;
-
-

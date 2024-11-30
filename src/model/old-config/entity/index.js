@@ -1,9 +1,7 @@
-import AppError from "../app-error";
-import Environment from "./environment";
+import AppError from "../../error";
+import Environment from "../../environment";
 
 export default class Entity {
-    static validators = [];
-
     constructor(
         parent,
         name,
@@ -37,12 +35,6 @@ export default class Entity {
         return path.join(".");
     }
 
-    _validateSpec(spec) {
-        this.constructor.validators.forEach(([validator, errorMessage]) => {
-            if (!validator(spec))
-                throw new AppError("Specification", errorMessage, this.key);
-        });
-    }
-
+    _validateSpec(spec) { }
     _loadSpec(spec) { } 
 }

@@ -1,10 +1,11 @@
 
-import Entity from "../entity";
-import AppError from "../app-error";
+import Entity from "./entity";
+import AppError from "../error";
 
 export default class ConfigBase extends Entity {
     static requiredProperties = [];
     static optionalProperties = [];
+    static subConfigs = {};
 
     static get allProperties() {
         return [
@@ -28,4 +29,6 @@ export default class ConfigBase extends Entity {
         } 
         super._validateSpec(spec);
     }
+
+    
 }

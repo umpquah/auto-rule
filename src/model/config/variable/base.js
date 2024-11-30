@@ -1,6 +1,7 @@
-import Entity from "../entity";
+import ConfigNode from "../node";
 
-export default class VariableBase extends Entity {
+export default class VariableBase extends ConfigNode {
+    static validators = [];
     static typeKeyword = "";
 
     constructor(parent, name, spec) {
@@ -15,13 +16,9 @@ export default class VariableBase extends Entity {
     
     refresh() { }
 
-    addedToEnvironment() { }
+    wasAddedToEnvironment(environment) { }
     
     get value() {
         return this._value;
     }
-
-    toString() {
-        return `[${this.name}: ${JSON.stringify(this.value)}]`;
-    }
-};
+}
