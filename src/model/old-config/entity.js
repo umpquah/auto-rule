@@ -1,5 +1,5 @@
-import AppError from "../../error";
-import Environment from "../../environment";
+import AppError from "../error";
+import Environment from "../environment";
 
 export default class Entity {
     constructor(

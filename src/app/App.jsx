@@ -1,43 +1,99 @@
 import { useState } from "react";
 import { Container, Tab, Tabs } from "react-bootstrap";
 import { DEFAULT_SETTINGS_JSON } from "./settings/defaults";
-import { AppError } from "../model";
+import { AppError, StageManager } from "../model";
 import Game from "./Game";
 import ConfigPanel from "./ConfigPanel"
 import Message from "../components/message";
 import '../style.scss';
 
-// import VariableBuilder from "../model/config/variable/builder";
-import Group from "../model/config/group";
 
-import { entries } from "lodash";
-import { ExpressionWithUnits } from "../model/config/variable/expression";
+import Stage from "../model/config/stage-manager/stage";
+import ConfigGroup from "../model/config/group";
 
+/* eslint-disable no-template-curly-in-string */
 const App = ({
     settings = DEFAULT_SETTINGS_JSON
 }) => {
     const [error, setError] = useState(null);
 
     try { 
-        const group = new Group(
-            null,
-            "group",
+        const manager = new StageManager(
             {
-                number: 1,
-                word: "cat",
-                otherWord: { literal: "cake" },
-                otherNumber: { literal: 99 },
-                calculatedAnswer: { expr: "6 * 7"},
-                calculatedString: { exprString: "The answer is ${6 * 7}"},
-                formattedAmount: { exprWithUnits: ["1 + 2 + 3", "mouse", "mice"] },
-                isFancy: { chance: 0.5 },
-                steps: { range: [1, 100] },
-                prize: { select: ["toy", "candy", "kitten", "sticker"] },
-            },
+                initialStage: "bar",
+                stages: {
+                    stageA: {
+                        title: "Stage A",
+                        description: "this is stage A",
+                        preamble: { content: "Are you ready?", confirm: "Yes!" },
+                        parameters: [
+                            {
+                                number: 17,
+                                word: "cat",
+                                mouseCount: { range: [0, 3] },
+                                isFancy: { chance: 0.5 },
+                                cookies: { range: [5, 10] },
+                                prize: { select: ["toy", "candy", "kitten", "sticker"] },
+                            },
+                            {
+                                fancyReport: { expr: "isFancy ? 'fancy' : 'plain'" },
+                                cookieReport: { exprString: "You get ${cookies} cookies!" },
+                                mouseReport: { exprWithUnits: ["mouseCount", "mouse", "mice"] },
+                                prizeReport: { exprString: "You win a ${prize}!" },
+                            }
+                        ],
+                        resolution: {
+                            next: "foo",
+                            announce: { content: { exprString: "Come get your ${prize}."} },
+                            wait: { 
+                                duration: { expr: "cookies"},
+                                hidden: { expr: "isFancy"},
+                            },
+                        }
+                    },
+                },
+            }
         );
 
-        console.log("Group:");
-        console.dir(group.value);
+        // const outer = new ConfigGroup(null, "outer", null);
+
+        // const stageA = new Stage(
+        //     outer,
+        //     "stageA",
+        //     {
+        //         title: "Stage A",
+        //         description: "this is stage A",
+        //         preamble: { content: "Are you ready?", confirm: "Yes!" },
+        //         parameters: [
+        //             {
+        //                 number: 17,
+        //                 word: "cat",
+        //                 mouseCount: { range: [0, 3] },
+        //                 isFancy: { chance: 0.5 },
+        //                 cookies: { range: [5, 10] },
+        //                 prize: { select: ["toy", "candy", "kitten", "sticker"] },
+        //             },
+        //             {
+        //                 fancyReport: { expr: "isFancy ? 'fancy' : 'plain'" },
+        //                 cookieReport: { exprString: "You get ${cookies} cookies!" },
+        //                 mouseReport: { exprWithUnits: ["mouseCount", "mouse", "mice"] },
+        //                 prizeReport: { exprString: "You win a ${prize}!" },
+        //             }
+        //         ],
+        //         resolution: {
+        //             next: "foo",
+        //             announce: { content: { exprString: "Come get your ${prize}."} },
+        //             wait: { 
+        //                 duration: { expr: "cookies"},
+        //                 hidden: { expr: "isFancy"},
+        //             },
+        //         }
+        //     }
+        // );
+
+        // console.dir(stageA.value);
+        console.dir(manager.value);
+
     } catch (e) {
         if (e instanceof AppError) {
             console.log(`*** ${e.key} - ${e.category} Error: ${e.message}`);

@@ -1,34 +1,30 @@
-import { pick } from "lodash";
-import ConfigBase from "../../old-config/base";
-import { ContentAndConfirm, Parameters, Resolution } from "../../old-config/block";
+import ConfigGroup from "../group";
+import Confirmable from "./confirmable";
+import Parameters from "./parameters";
+import Resolution from "./resolution";
 
-export default class Stage extends ConfigBase {
+export default class Stage extends ConfigGroup {
     static requiredProperties = ["title", "resolution"];
     static optionalProperties = ["description", "preamble", "parameters"];
-    static  = [
-        "parameters",
-        "preamble",
-        ["title", "description"],
-        ["resolution"],
-    ];
+
     static subConfigs = {
         parameters: Parameters,
-        preamble: ContentAndConfirm,
+        preamble: Confirmable,
         resolution: Resolution,
     };
 
     constructor(parent, name, spec) {
         // Stages have independent scopes for names
-        super(parent, name, spec, { forkEnvironment: true, intermediateKey: "stages" });
+        super(parent, name, spec, { forkEnvironment: true });
         this.refresh();
     }
 
-    _loadSpec(spec) {
-        this.constructor.scopeOrder.forEach((propertyList) => {
+    // _loadSpec(spec) {
+    //     this.constructor.scopeOrder.forEach((propertyList) => {
 
-        });
-        this.environment.add(this, Variable.buildFromSpecs(this, spec));
-    }
+    //     });
+    //     this.environment.add(this, Variable.buildFromSpecs(this, spec));
+    // }
 
     // _loadSpec(spec) {
     //     this.props = { key: this.key, resolution: {} };
@@ -48,10 +44,9 @@ export default class Stage extends ConfigBase {
     //     });
     // }
 
-    // refresh() {
-    //     this.environment.refresh();
-    //     this._updateProps();
-    //     return this.props;
-    // }
+    refresh() {
+        // TODO: Figure this out!
+        // this.environment.refresh();
+    }
 
 }

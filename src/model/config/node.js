@@ -46,7 +46,7 @@ export default class ConfigNode {
         validators.forEach((validator) => {
             const result = validator(spec);
             if (result !== true) {
-                throw new AppError(this.key, result);
+                throw new AppError(this.key, result, "Specification");
             }
         });
     }

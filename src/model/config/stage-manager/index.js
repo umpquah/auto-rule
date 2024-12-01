@@ -1,22 +1,39 @@
-// import { cloneDeep, entries } from "lodash";
-// import ConfigBase from "../base";
-// import { BuiltIns, Parameters } from "../block";
-// import Stage from "./stage";
-// import AppError from "../../error";
+import Stages from "./stages";
+import ConfigGroup from "../group";
+import Parameters from "./parameters";
 
-export default class StageManager {}
+export default class StageManager extends ConfigGroup {
+    static requiredProperties = ["initialStage", "stages"];
+    static optionalProperties = ["parameters"];
+    static subConfigs = {
+        parameters: Parameters,
+        stages: Stages,
+    }
+
+    constructor(spec) {
+        super(null, "", spec);
+        this.reset();
+    }
+
+    reset() {
+        // this._advanceUsingKey("initialStage", this.initialStageKey, true);
+    }
+
+    // _loadSpec(spec) {
+    //     super._loadSpec(spec);
+    //     this.initialStage = this._groupItems.initialStage.value;
+    //     this.stages = this._groupItems.stages;
+    //     this.parameters = this._groupItems.parameters?.value;
+    // }
+}
+
 
 // export default class StageManager extends ConfigBase {
 
 
-//     constructor(spec) {
-//         super(null, "", spec);
-//         this.reset();
-//     }
 
-//     reset() {
-//         this._advanceUsingKey("initialStage", this.initialStageKey, true);
-//     }
+
+    
 
 //     advance() {
 //         const { resolution: { next, clearBeforeNext} } = this.current;

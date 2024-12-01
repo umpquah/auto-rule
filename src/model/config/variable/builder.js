@@ -57,10 +57,11 @@ export default class VariableBuilder {
             }
         });
         if (isEmpty(additionalSpecs)) {
-            return [result];
+            return result;
         } else {
             const exprWithUnitsGroup = this._buildFromSpecGroup(parent, additionalSpecs);
-            return [result, ...exprWithUnitsGroup];
+            assign(result, exprWithUnitsGroup)
+            return result;
         }
     }
 
@@ -87,7 +88,7 @@ function _splitSpec(parent, name, spec) {
     }
     if (unitsSpec) {
         if (!Array.isArray(unitsSpec) || unitsSpec.length < 1 || unitsSpec.length > 2) {
-            throw new AppError("Specification", `${parent.key}: ${name} units must be array of 1-2 elements`);
+            throw new AppError("Specification", `${name} units must be array of 1-2 elements`, parent.key);
         }
         const withUnitsName = `${name}$display`;
         exprWithUnitsSpec = { 

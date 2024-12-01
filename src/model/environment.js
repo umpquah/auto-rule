@@ -34,22 +34,18 @@ export default class Environment {
         }
     }
 
-    add(parent, groupList) {
-        if (!Array.isArray(groupList))
-            throw new AppError("Internal", "Environment.add() requires array");
-        let addedBindings = {};
-        groupList.forEach((group) => {
-            let groupBindings = {};
-            entries(group).forEach(([name, object]) => {
-                this._validateName(parent, name);
-                groupBindings[name] = object;
-                if (object.wasAddedToEnvironment)
-                    object.wasAddedToEnvironment(this);
-            });
-            assign(this.bindings, groupBindings);
-            assign(addedBindings, groupBindings);
+    add(parent, group) {
+        if (!(typeof group === "object"))
+            throw new AppError("<internal>", "Environment.add() requires an object", "Internal");
+        let groupBindings = {};
+        entries(group).forEach(([name, object]) => {
+            this._validateName(parent, name);
+            groupBindings[name] = object;
+            if (object.wasAddedToEnvironment)
+                object.wasAddedToEnvironment(this);
         });
-        return addedBindings;
+        assign(this.bindings, groupBindings);
+        return groupBindings;
     }
 
     applyToAll(methodName, ...args) {
