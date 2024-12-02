@@ -17,6 +17,7 @@ export default class StageManager extends ConfigGroup {
         this.stages = this.groupItems.stages.groupItems;
         this.initialStageKey = this.groupItems.initialStage.value;
         this.state = {};
+        this.round = 0;
         this.reset();
     }
 
@@ -29,19 +30,24 @@ export default class StageManager extends ConfigGroup {
         if (!stage)
             throw new AppError(sourceKey, `No stage with key '${stageKey}'`, "Specification");
         stage.refresh();
-        return stage.value;
+        return {round: this.round, ...stage.value};
     }
 
     _advanceUsingKey(sourceKey, stageKey, clearFirst = false) {
         const nextStageState = cloneDeep(this._getRefreshedStageForKey(sourceKey, stageKey));
-        if (clearFirst)
+        if (clearFirst) {
+            this.round += 1;
             this.state.stages = [];
+
+        }
         this.state.stages.push(nextStageState);
         this.currentStageState = nextStageState;
+        console.dir(this.state.stages);
     }
 
     advance() {
-        const { resolution: { next, clearBeforeNext } } = this.currentStageProps;
+        const { resolution: { next, clearBeforeNext } } = this.currentStageState;
+        console.log("Advancing to", next);
         this._advanceUsingKey("next", next, clearBeforeNext);
     }
 }

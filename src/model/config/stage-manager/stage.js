@@ -21,4 +21,8 @@ export default class Stage extends ConfigGroup {
     refresh() {
         this.environment.applyToAll((v) => v.refresh());
     }
+
+    get value() {
+        return {key: this.key, ...super.value};
+    }
 }

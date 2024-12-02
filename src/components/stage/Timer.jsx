@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { ProgressBar } from "react-bootstrap";
 import { ONE_SECOND } from "../../app/settings";
 
-const Timer = ({ wait, hideTime, timerDone }) => {
-    // const [remaining, setRemaining] = useState(duration);
+const Timer = ({ wait: { duration, hidden }, timerDone }) => {
+    const [remaining, setRemaining] = useState(duration);
     // const [running, setRunning] = useState(true);
+    const [running, setRunning] = useState(false);
 
     // useEffect(() => {
     //     if (duration) {
@@ -30,19 +31,20 @@ const Timer = ({ wait, hideTime, timerDone }) => {
     //         whenDone();
     // }, [running])
 
-    // const clock = (wait?.hidden && remaining > 0) ? "-??-" : formatTime(remaining);
-    // const realPercent = 100 * (1 - remaining / duration);
-    // let percent = realPercent;
-    // if (wait?.hidden && remaining > 0) {
-    //     // randomly sweep between lower half and upper half (up to 90%)
-    //     percent = ((remaining % 2) + Math.random()) * 45;
-    // }
-    // return (
-    //     <div className="section timer">
-    //         <ProgressBar now={percent} />
-    //         <div>{clock}</div>
-    //     </div>
-    // );
+    const clock = (hidden && remaining > 0) ? "-??-" : formatTime(remaining);
+    const realPercent = 100 * (1 - remaining / duration);
+    let percent = realPercent;
+    if (hidden && remaining > 0) {
+        // randomly sweep between lower half and upper half (up to 90%)
+        console.log("RANDOM SWEEP");
+        percent = ((remaining % 2) + Math.random()) * 45;
+    }
+    return (
+        <div className="section timer">
+            <ProgressBar now={percent} />
+            <div>{clock}</div>
+        </div>
+    );
 };
 
 const formatTime = (seconds) => {

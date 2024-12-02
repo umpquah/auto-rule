@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 
 import { AppError, StageManager } from "../model";
 
@@ -36,16 +36,18 @@ function Game({ settings }) {
 
     const handleNext = () => {
         manager.advance();
-        // console.dir(manager.props.stages);
+        setGameState({...manager.state});
     }
 
     const stages = gameState?.stages ?? [];
 
     return (
         <Container id="app">
-            {stages.map((props, i) => (
+            <div>{stages.length}</div>
+            <Button onClick={handleNext}>Next</Button>
+            {stages.map(({key: stageKey, round, ...props}) => (
                 <Stage 
-                    key={i}
+                    key={stageKey + round}
                     whenActionDone={handleActionDone}
                     whenTimerDone={handleTimerDone}
                     {...props} 

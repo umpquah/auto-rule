@@ -23,24 +23,24 @@ const Stage = ({
     whenTimerDone,
 }) => {
     const [spinning, setSpinning] = useState(!preamble);
-    const [preambling, setPreambling] = useState(true);
+    const [preambling, setPreambling] = useState(!!preamble);
     const [actionPending, setActionPending] = useState(!!action);
 
-    const showAnnouncement = !preambling && announce;
-    const showAction = !preambling && action;
-    const preambleWaiting = preamble && preambling && !spinning;
-    const showTimer = !preambling && wait;
+    const preambleComplete = !preambling && !spinning;
+    const showAnnouncement = preambleComplete && announce;
+    const showAction = preambleComplete && action;
+    const showTimer = preambleComplete && wait;
 
     useEffect(() => {
         if (spinning) {
             setTimeout(() => {
                 setSpinning(false);
-                setPreambling(false);
             }, SPINNING_DELAY);
         }
     }, [spinning]);
 
     const preambleDone = () => {
+        setPreambling(false);
         setSpinning(true);
     }
 
@@ -61,10 +61,10 @@ const Stage = ({
             {description &&
                 <Section content={description} />
             }
-            {preamble && 
+            {preambling && 
                 <Section content={preamble.content} />
             }
-            {preambleWaiting && 
+            {preambling && 
                 <ConfirmButton label={preamble?.confirmation || "Ok"} onClick={preambleDone} />
             }            
             {spinning && 
