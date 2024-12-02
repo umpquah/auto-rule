@@ -13,10 +13,10 @@ export default class Parameters extends ConfigGroup {
 
     _loadSpec(spec) {
         let specList = Array.isArray(spec) ? spec : [spec];
-        this._groupItems = {};
-        specList.forEach((spec) => {
-            const variableGroup = this._buildAndAdd(spec);
-            assign(this._groupItems, variableGroup);
+        this.groupItems = {};
+        specList.forEach((paramSpec) => {
+            const variableGroup = this._buildAndAdd(paramSpec);
+            assign(this.groupItems, variableGroup);
         });
     }
 }

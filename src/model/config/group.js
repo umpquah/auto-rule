@@ -1,4 +1,4 @@
-import { entries, keys, mapValues, omit, pick } from "lodash";
+import { assign, entries, keys, mapValues, omit, pick } from "lodash";
 
 import AppError from "../error";
 import ConfigNode from "./node";
@@ -33,31 +33,34 @@ export default class ConfigGroup extends ConfigNode {
                 throw new AppError(this.key, `'${prop}' not allowed here`,  "Specification");
             }
         } 
-        super._validateSpec(spec);
     }
 
     _loadSpec(spec) {
         const { subConfigs } = this.constructor;
         const subConfigKeys = keys(subConfigs);
         const subSpecs = pick(spec, subConfigKeys);
-        const plainSpec = omit(spec, subConfigKeys);
+        const plainSpecs = omit(spec, subConfigKeys);
 
-        this._groupItems = this._buildAndAdd(plainSpec);
+        this.groupItems = this._buildAndAdd(plainSpecs);
 
         entries(subSpecs).forEach(([subConfigKey, spec]) => {
             const configClass = subConfigs[subConfigKey]; 
-            this._groupItems[subConfigKey] = new configClass(this, subConfigKey, spec);
+            this.groupItems[subConfigKey] = new configClass(this, subConfigKey, spec);
         });
     }
 
     _buildAndAdd(spec) {
-        const variableGroup = VariableBuilder.fromSpecs(this, spec);
-        this.environment.add(this, variableGroup);
-        return variableGroup;
+        let items = {};
+        const variableGroupList = VariableBuilder.fromSpecs(this, spec);
+        variableGroupList.forEach((variableGroup) => {
+            this.environment.add(this, variableGroup);
+            assign(items, variableGroup);
+        });
+        return items;
     }
 
     get value() {
-        return mapValues(this._groupItems, (v) => v.value);
+        return mapValues(this.groupItems, (v) => v.value);
     }
 
     

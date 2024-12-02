@@ -41,14 +41,15 @@ export default class Environment {
         entries(group).forEach(([name, object]) => {
             this._validateName(parent, name);
             groupBindings[name] = object;
-            if (object.wasAddedToEnvironment)
+            if (typeof object["wasAddedToEnvironment"] === "function") {
                 object.wasAddedToEnvironment(this);
+            }
         });
         assign(this.bindings, groupBindings);
         return groupBindings;
     }
 
-    applyToAll(methodName, ...args) {
-        this.objects.forEach((object) => object[methodName](...args));
+    applyToAll(func) {
+        this.objects.forEach((obj) => { func(obj) });
     }
 }

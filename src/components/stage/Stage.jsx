@@ -4,6 +4,7 @@ import { Container } from "react-bootstrap";
 import { SPINNING_DELAY } from "../../app/settings";
 import ConfirmButton from "./ConfirmButton";
 import Instruction from "./Instruction";
+import Section from "./Section";
 import Spinner from "./Spinner";
 import StageBanner from "./StageBanner";
 import Timer from "./Timer";
@@ -13,13 +14,10 @@ const Stage = ({
     title,
     description,
     preamble,
-    preambleConfirm,
     resolution: {
         announce,
         action,
-        actionConfirm,
         wait,
-        hideTime,
     },
     whenActionDone,
     whenTimerDone,
@@ -52,7 +50,7 @@ const Stage = ({
     }
 
     const timerDone = () => {
-
+        whenTimerDone();
     }
 
     return (
@@ -61,13 +59,13 @@ const Stage = ({
                 <StageBanner title={title} />
             }
             {description &&
-                 <div>{description}</div>
+                <Section content={description} />
             }
             {preamble && 
-                <div>{preamble}</div>
+                <Section content={preamble.content} />
             }
             {preambleWaiting && 
-                <ConfirmButton label={preambleConfirm || "Ok"} onClick={preambleDone} />
+                <ConfirmButton label={preamble?.confirmation || "Ok"} onClick={preambleDone} />
             }            
             {spinning && 
                 <Spinner />
@@ -76,14 +74,14 @@ const Stage = ({
                 <Instruction message={announce} className="announcement" />
             }
             {showAction &&
-                <Instruction message={action} className="action" />
+                <Instruction message={action.content} className="action" />
             }
             {showAction && actionPending &&
-                <ConfirmButton label={actionConfirm || "Done"} onClick={actionDone} />
+                <ConfirmButton label={action?.confirm || "Done"} onClick={actionDone} />
             }
             {showTimer &&
-                <Timer wait={wait} hideTime={hideTime} timerDone={timerDone} />
-            } 
+                <Timer wait={wait} hideTime={wait?.hidden} timerDone={timerDone} />
+            }
         </Container>
     );
 };

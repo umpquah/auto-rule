@@ -4,9 +4,9 @@ import Stage from "./stage";
 
 export default class Stages extends ConfigGroup {
     _loadSpec(spec) {
-        this._groupItems = {};
+        this.groupItems = {};
         entries(spec).forEach(([stageKey, stageSpec]) => {
-            this._groupItems[stageKey] = new Stage(this, stageKey, stageSpec);
+            this.groupItems[stageKey] = new Stage(this, stageKey, stageSpec);
         });
     }
 }

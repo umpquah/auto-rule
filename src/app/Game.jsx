@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { Container, /* Tab, Tabs */ } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 
 import { AppError, StageManager } from "../model";
-import { DEFAULT_SETTINGS_JSON } from "./settings";
+
 
 import Stage from "../components/stage";
 import '../style.scss';
 
-function Game() {
-    const [state, setState] = useState({ stages: [] });
+function Game({ settings }) {
+    const [manager, setManager] = useState(null);
+    const [gameState, setGameState] = useState(null);
 
     const handleActionDone = () => {
         console.log("ACTION DONE");
@@ -19,24 +20,32 @@ function Game() {
     }
 
     useEffect(() => {
-        try {
-            const manager = new StageManager(JSON.parse(DEFAULT_SETTINGS_JSON));
-            setState(manager.props);
-        } catch (err) {
-            if (err instanceof AppError) 
-                console.error(`*** ${err.name} @ ${err.key}: ${err.message}`);
-            else
-                throw err;
+        if (settings) {
+            try {
+                const manager = new StageManager(JSON.parse(settings));
+                setManager(manager);
+                setGameState(manager.state);
+            } catch (err) {
+                if (err instanceof AppError) 
+                    console.log(`*** ${err.key} - ${err.category} Error: ${err.message}`);
+                else
+                    throw err;
+            }
         }
-    }, []);
+    }, [settings]);
 
-    const { stages } = state;
+    const handleNext = () => {
+        manager.advance();
+        // console.dir(manager.props.stages);
+    }
+
+    const stages = gameState?.stages ?? [];
 
     return (
         <Container id="app">
-            {stages.map(({key, ...props}) => (
+            {stages.map((props, i) => (
                 <Stage 
-                    key={key}
+                    key={i}
                     whenActionDone={handleActionDone}
                     whenTimerDone={handleTimerDone}
                     {...props} 

@@ -56,13 +56,10 @@ export default class VariableBuilder {
                 assign(additionalSpecs, exprWithUnitsSpec);
             }
         });
-        if (isEmpty(additionalSpecs)) {
-            return result;
-        } else {
-            const exprWithUnitsGroup = this._buildFromSpecGroup(parent, additionalSpecs);
-            assign(result, exprWithUnitsGroup)
-            return result;
-        }
+        if (isEmpty(additionalSpecs))
+            return [result];
+        else 
+            return [result].concat(VariableBuilder.fromSpecs(parent, additionalSpecs));
     }
 
     static fromSpecs(parent, specs) {

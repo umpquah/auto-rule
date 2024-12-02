@@ -12,7 +12,7 @@ export default class Resolution extends ConfigGroup {
     static optionalProperties = ["announce", "action", "wait", "clearBeforeNext"];
     static subConfigs = {
         wait: Wait,
-        announce: Confirmable,
+        action: Confirmable,
     };
 
     _validateSpec(spec) {

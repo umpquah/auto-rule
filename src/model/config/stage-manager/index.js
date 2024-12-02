@@ -1,6 +1,8 @@
+import { cloneDeep } from "lodash";
 import Stages from "./stages";
 import ConfigGroup from "../group";
 import Parameters from "./parameters";
+import AppError from "../../error";
 
 export default class StageManager extends ConfigGroup {
     static requiredProperties = ["initialStage", "stages"];
@@ -12,33 +14,43 @@ export default class StageManager extends ConfigGroup {
 
     constructor(spec) {
         super(null, "", spec);
+        this.stages = this.groupItems.stages.groupItems;
+        this.initialStageKey = this.groupItems.initialStage.value;
+        this.state = {};
         this.reset();
     }
 
     reset() {
-        // this._advanceUsingKey("initialStage", this.initialStageKey, true);
+        this._advanceUsingKey(this.key, this.initialStageKey, true);
     }
 
-    // _loadSpec(spec) {
-    //     super._loadSpec(spec);
-    //     this.initialStage = this._groupItems.initialStage.value;
-    //     this.stages = this._groupItems.stages;
-    //     this.parameters = this._groupItems.parameters?.value;
-    // }
+    _getRefreshedStageForKey(sourceKey, stageKey) {
+        const stage = this.stages[stageKey];
+        if (!stage)
+            throw new AppError(sourceKey, `No stage with key '${stageKey}'`, "Specification");
+        stage.refresh();
+        return stage.value;
+    }
+
+    _advanceUsingKey(sourceKey, stageKey, clearFirst = false) {
+        const nextStageState = cloneDeep(this._getRefreshedStageForKey(sourceKey, stageKey));
+        if (clearFirst)
+            this.state.stages = [];
+        this.state.stages.push(nextStageState);
+        this.currentStageState = nextStageState;
+    }
+
+    advance() {
+        const { resolution: { next, clearBeforeNext } } = this.currentStageProps;
+        this._advanceUsingKey("next", next, clearBeforeNext);
+    }
 }
-
-
-// export default class StageManager extends ConfigBase {
-
 
 
 
     
 
-//     advance() {
-//         const { resolution: { next, clearBeforeNext} } = this.current;
-//         this._advanceUsingKey(`${this.current.key}.next`, next, clearBeforeNext);
-//     }
+
 
 //     _loadSpec(spec) {
 //         super._loadSpec(spec);
@@ -53,19 +65,8 @@ export default class StageManager extends ConfigGroup {
 //         });
 //     }
 
-//     _getRefreshedStageForKey(sourceKey, stageKey) {
-//         const stage = this.stages[stageKey];
-//         if (!stage)
-//             throw new AppError("Specification", `No stage with key '${stageKey}'`, sourceKey);
-//         return stage.refresh();
-//     }
+//     
 
-//     _advanceUsingKey(sourceKey, stageKey, clearFirst = false) {
-//         const stageProps = this._getRefreshedStageForKey(sourceKey, stageKey);
-//         this.current = cloneDeep(stageProps);
-//         if (clearFirst)
-//             this.props.stages = [];
-//         this.props.stages.push(this.current);
-//     }
+
     
 // }

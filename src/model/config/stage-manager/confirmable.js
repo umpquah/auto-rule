@@ -5,9 +5,10 @@ export default class Confirmable extends ConfigGroup {
     static optionalProperties = ["confirm"];
 
     constructor(key, name, spec) {
-        super(key, name, spec, { forkEnvironment: true });
+        super(key, name, Confirmable._adaptSpec(spec), { forkEnvironment: true });
     }
 
-
-
+    static _adaptSpec(spec) {
+        return (typeof spec === "object") ? spec : { content: spec };
+    }
 }
