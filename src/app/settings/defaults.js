@@ -10,9 +10,10 @@ const DEFAULT_SETTINGS = {
     stages: {
         wait: {
             title: "Waiting",
+            description: "Wait a certain amount of time",
             preamble: { content: "We will now determine wait time.", confirm: "Continue" },
             parameters: { 
-                time: { range: [1, 3], units: ["minute"] },
+                time: { range: [1, 2], units: ["minute"] },
             },
             resolution: {
                 announce: { exprString: "You will wait [${time$display}]." },
@@ -22,6 +23,7 @@ const DEFAULT_SETTINGS = {
         },
         decide: {
             title: "What Next?",
+            description: "Deciding reward or penalty...",
             parameters: [
                 {
                     outcomes: { literal: ["reward", "penalty"] },
@@ -40,12 +42,13 @@ const DEFAULT_SETTINGS = {
             title: "Reward",
             parameters: {
                 item: "ice cream",
-                verb: "eat",
+                verb: "Eat",
                 count: { range: [1, 3], units: ["scoop"] },
             },
+            description: "Determining your reward",
             preamble: "Ready for a reward?",
             resolution: {
-                announce: { exprString: "You may ${verb} [${count$display} of ${item}]." },
+                announce: { exprString: "You may ${verb.toLowerCase()} [${count$display} of ${item}]." },
                 action: { 
                     content: { exprString: "${verb} your ${item} before continuing." },
                     confirm: "Yum! (Done.)"
@@ -58,11 +61,11 @@ const DEFAULT_SETTINGS = {
             title: "Penalty",
             parameters: {
                 item: "dishes",
-                verb: "wash",
+                verb: "Wash",
                 count: { range: [1, 3], units: ["pile"] },
             },
             resolution: {
-                announce:  {exprString: "You must ${verb} [${count$display} of ${item}]" },
+                announce:  {exprString: "You must ${verb.toLowerCase()} [${count$display} of ${item}]" },
                 action: { 
                     content: { exprString: "${verb} the ${item}, then continue." },
                 },

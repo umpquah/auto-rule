@@ -2,13 +2,18 @@
 import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { SPINNING_DELAY } from "../../app/settings";
-import ConfirmButton from "./ConfirmButton";
-import Instruction from "./Instruction";
 import Section from "./Section";
 import Spinner from "./Spinner";
-import StageBanner from "./StageBanner";
 import Timer from "./Timer";
 
+
+const Step = Object.freeze({
+    PREAMBLE: 0,
+    SPIN: 1,
+    ACTION: 2,
+    WAIT: 3,
+    DONE: 4,
+});
 
 const Stage = ({
     title,
@@ -22,30 +27,27 @@ const Stage = ({
     whenActionDone,
     whenTimerDone,
 }) => {
-    const [spinning, setSpinning] = useState(!preamble);
-    const [preambling, setPreambling] = useState(!!preamble);
-    const [actionPending, setActionPending] = useState(!!action);
-
-    const preambleComplete = !preambling && !spinning;
-    const showAnnouncement = preambleComplete && announce;
-    const showAction = preambleComplete && action;
-    const showTimer = preambleComplete && wait;
+    const [step, setStep] = useState(
+        preamble ? Step.PREAMBLE : Step.SPIN
+    );
 
     useEffect(() => {
-        if (spinning) {
+        if (step === Step.SPIN) {
             setTimeout(() => {
-                setSpinning(false);
+                const newStep = action ? Step.ACTION : wait ? Step.WAIT : Step.DONE;
+                setStep(newStep);
+                if (newStep === Step.DONE)
+                    whenActionDone();
             }, SPINNING_DELAY);
         }
-    }, [spinning]);
+    }, [action, wait, step, whenActionDone]);
 
     const preambleDone = () => {
-        setPreambling(false);
-        setSpinning(true);
+        setStep(Step.SPIN);
     }
 
     const actionDone = () => {
-        setActionPending(false);
+        setStep(Step.DONE);
         whenActionDone();
     }
 
@@ -55,33 +57,42 @@ const Stage = ({
 
     return (
         <Container className="stage">
-            {title && 
-                <StageBanner title={title} />
-            }
-            {description &&
-                <Section content={description} />
-            }
-            {preambling && 
-                <Section content={preamble.content} />
-            }
-            {preambling && 
-                <ConfirmButton label={preamble?.confirmation || "Ok"} onClick={preambleDone} />
-            }            
-            {spinning && 
-                <Spinner />
-            }
-            {showAnnouncement &&
-                <Instruction message={announce} className="announcement" />
-            }
-            {showAction &&
-                <Instruction message={action.content} className="action" />
-            }
-            {showAction && actionPending &&
-                <ConfirmButton label={action?.confirm || "Done"} onClick={actionDone} />
-            }
-            {showTimer &&
-                <Timer wait={wait} hideTime={wait?.hidden} timerDone={timerDone} />
-            }
+            <Section
+                className="stage-banner"
+                visible={title}
+                content={title}
+            />
+            <Section
+                className="description"
+                visible={description}
+                content={description}
+            />
+            <Section
+                className="preamble"
+                visible={step === Step.PREAMBLE}
+                content={preamble?.content}
+                button={{ label: preamble?.confirm ?? "Ok", onClick: preambleDone }}
+            />
+            <Spinner visible={step === Step.SPIN} />
+            <Section
+                className="announce"
+                visible={step >= Step.ACTION}
+                content={announce}
+            />
+            <Section
+                className="action"
+                visible={step >= Step.ACTION && action}
+                content={action?.content}
+                button={
+                    step === Step.ACTION &&
+                    { label: action?.confirm ?? "Done", onClick: actionDone }
+                }
+            />
+            <Timer 
+                visible={step === Step.WAIT}
+                wait={wait}
+                timerDone={timerDone}
+            />
         </Container>
     );
 };

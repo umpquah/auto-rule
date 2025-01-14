@@ -42,7 +42,6 @@ export default class StageManager extends ConfigGroup {
         }
         this.state.stages.push(nextStageState);
         this.currentStageState = nextStageState;
-        console.dir(this.state.stages);
     }
 
     advance() {

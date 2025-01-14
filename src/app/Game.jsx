@@ -1,23 +1,15 @@
 import { useEffect, useState } from "react";
-import { Button, Container } from "react-bootstrap";
-
+import { Container } from "react-bootstrap";
 import { AppError, StageManager } from "../model";
+import { ADVANCE_DELAY } from "./settings";
 
 
 import Stage from "../components/stage";
 import '../style.scss';
 
-function Game({ settings }) {
+function Game({ settings, setError }) {
     const [manager, setManager] = useState(null);
     const [gameState, setGameState] = useState(null);
-
-    const handleActionDone = () => {
-        console.log("ACTION DONE");
-    }
-
-    const handleTimerDone = () => {
-        console.log("TIMER DONE");
-    }
 
     useEffect(() => {
         if (settings) {
@@ -26,30 +18,33 @@ function Game({ settings }) {
                 setManager(manager);
                 setGameState(manager.state);
             } catch (err) {
-                if (err instanceof AppError) 
-                    console.log(`*** ${err.key} - ${err.category} Error: ${err.message}`);
+                if (err instanceof AppError) {
+                    const msg = `*** ${err.key} - ${err.category} Error: ${err.message}`;
+                    console.error(msg);
+                    setError(msg);
+                }
                 else
                     throw err;
             }
         }
-    }, [settings]);
+    }, [settings, setError]);
 
-    const handleNext = () => {
-        manager.advance();
-        setGameState({...manager.state});
-    }
+    const nextStage = () => {
+        setTimeout(() => {
+            manager.advance();
+            setGameState({...manager.state});
+        }, ADVANCE_DELAY)
+    };
 
     const stages = gameState?.stages ?? [];
 
     return (
         <Container id="app">
-            <div>{stages.length}</div>
-            <Button onClick={handleNext}>Next</Button>
             {stages.map(({key: stageKey, round, ...props}) => (
                 <Stage 
                     key={stageKey + round}
-                    whenActionDone={handleActionDone}
-                    whenTimerDone={handleTimerDone}
+                    whenActionDone={nextStage}
+                    whenTimerDone={nextStage}
                     {...props} 
                 />
             ))}
