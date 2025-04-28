@@ -76,7 +76,7 @@ const Stage = ({
             <Spinner visible={step === Step.SPIN} />
             <Section
                 className="announce"
-                visible={step >= Step.ACTION}
+                visible={step >= Step.ACTION && announce}
                 content={announce}
             />
             <Section
@@ -84,8 +84,7 @@ const Stage = ({
                 visible={step >= Step.ACTION && action}
                 content={action?.content}
                 button={
-                    step === Step.ACTION &&
-                    { label: action?.confirm ?? "Done", onClick: actionDone }
+                    { label: action?.confirm ?? "Done", onClick: actionDone, disabled: step !== Step.ACTION }
                 }
             />
             <Timer 

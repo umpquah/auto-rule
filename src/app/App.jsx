@@ -2,22 +2,19 @@ import { useState } from "react";
 import { Container, Modal, Tab, Tabs } from "react-bootstrap";
 import Game from "./Game";
 import ConfigPanel from "./ConfigPanel"
-import Message from "../components/message";
-import { DEFAULT_SETTINGS_JSON } from "./settings";
+import { getDefaultSpecs } from "./settings";
 import '../style.scss';
 
-const App = ({
-    settings = DEFAULT_SETTINGS_JSON
-}) => {
+const App = () => {
     const [error, setError] = useState("");
+    const [gameSpecs, setGameSpecs] = useState(getDefaultSpecs());
 
     return (
         <>
             <Container id="main">
-                <Message {...error} isError={true} />
                 <Tabs fill defaultActiveKey="game">
                     <Tab eventKey="game" title="Game">
-                        <Game settings={settings} setError={setError} />
+                        <Game specsJson={gameSpecs} setError={setError} />
                     </Tab>
                     <Tab eventKey="config-panel" title="Config">
                         <ConfigPanel setError={setError} />

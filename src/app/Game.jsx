@@ -3,18 +3,17 @@ import { Container } from "react-bootstrap";
 import { AppError, StageManager } from "../model";
 import { ADVANCE_DELAY } from "./settings";
 
-
 import Stage from "../components/stage";
 import '../style.scss';
 
-function Game({ settings, setError }) {
+function Game({ specsJson, setError }) {
     const [manager, setManager] = useState(null);
     const [gameState, setGameState] = useState(null);
 
     useEffect(() => {
-        if (settings) {
+        if (specsJson) {
             try {
-                const manager = new StageManager(JSON.parse(settings));
+                const manager = new StageManager(JSON.parse(specsJson));
                 setManager(manager);
                 setGameState(manager.state);
             } catch (err) {
@@ -27,7 +26,7 @@ function Game({ settings, setError }) {
                     throw err;
             }
         }
-    }, [settings, setError]);
+    }, [specsJson, setError]);
 
     const nextStage = () => {
         setTimeout(() => {

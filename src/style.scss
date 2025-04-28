@@ -6,81 +6,69 @@ $special-text: #003b5a;
 $corner-radius: 1rem;
 
 #main {
-  width: 400px;
-  padding: 1rem 0 0 0;
-  .nav-link {
-    border-radius: $corner-radius $corner-radius 0 0;
-    background-color: #eee;
-    color: #999;
-    border-bottom-color: $active-outline;
-    &.active {
-      background-color: $active-bg;
-      border-color: $active-outline;
-      border-bottom-color: $active-bg;
-      color: $active-text;
-      font-weight: bold;
+    max-width: 350px;
+    padding: 1rem 0 0 0;
+
+    .nav-link {
+        border-radius: $corner-radius $corner-radius 0 0;
+        background-color: #eee;
+        color: #999;
+        border-bottom-color: $active-outline;
+
+        &.active {
+            background-color: $active-bg;
+            border-color: $active-outline;
+            border-bottom-color: $active-bg;
+            color: $active-text;
+            font-weight: bold;
+        }
     }
-  }
 }
 
-.tab-content > div > .container,  .tab-content > div > .container-fluid {
-  min-height: 480px;
-  border: solid 1px $active-outline;
-  border-radius: 0 0 $corner-radius $corner-radius;
-  border-top: none;
-  padding: 1rem;
+.tab-content>div>.container,
+.tab-content>div>.container-fluid {
+    min-height: 480px;
+    border: solid 1px $active-outline;
+    border-radius: 0 0 $corner-radius $corner-radius;
+    border-top: none;
+    padding: 0.5rem;
 }
 
 .container.stage {
-  text-align: center;
-  font-size: 1.2rem;
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 0;
+    margin-bottom: 1rem;
+    border: 1px solid $active-outline;
 }
-
 
 .section {
-  padding: 1rem 0.5rem 1rem 0.5rem;
-  border: 1px dashed gray;
+    padding: 0.25rem;
+    border: 1px dashed blue;
 
-  .callout {
-    color: $special-text;
-    font-weight: bold;
-    text-decoration: underline;
-  }
+    .inner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-  &.stage-banner {
-    padding: 0.25rem 0 0.25rem 0;
-    background-color: $active-bg;
-    border: 1px solid $active-outline;
-    font-size: 1.3rem;
-    color: $active-text-dark; 
-  }
+        .callout {
+            color: $special-text;
+            font-weight: bold;
+            text-decoration: underline;
+        }
 
-  &.confirm {
-    padding: 0.25em 0 0.25em 0;
-    .btn {
-      background-color: $active-text;
-      border: solid 1px $active-outline;
-      color: white;
-      &:hover {
-        border: solid 1px $active-outline;
-        background-color: $active-text-dark;
-      }
+        button {
+            margin: auto 0.75rem;
+        }
     }
-  }
-  &.announce, &.action {
-    font-size: 1.2rem;
-    
-  }
-  &.timer {
-    padding-top: 0.5rem;
-  }
+
+    &.stage-banner {
+        background-color: $active-bg;
+        border: 1px solid $active-outline;
+        color: $active-text-dark;
+    }
+
+    &.timer {
+        padding-top: 0;
+    }
 }
-
-
-
-.alert .header {
-  font-weight: bold;
-}
-
-
-
