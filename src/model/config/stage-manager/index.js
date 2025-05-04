@@ -38,40 +38,14 @@ export default class StageManager extends ConfigGroup {
         if (clearFirst) {
             this.round += 1;
             this.state.stages = [];
-
         }
         this.state.stages.push(nextStageState);
         this.currentStageState = nextStageState;
     }
 
-    advance() {
+    advance(branchChoice = null) {
         const { resolution: { next, clearBeforeNext } } = this.currentStageState;
         console.log("Advancing to", next);
         this._advanceUsingKey("next", next, clearBeforeNext);
     }
 }
-
-
-
-    
-
-
-
-//     _loadSpec(spec) {
-//         super._loadSpec(spec);
-//         const { stages: specStages, initialStage: initialStageKey } = spec;
-//         this.initialStageKey = initialStageKey;
-//         this.BuiltIns = new BuiltIns(this);
-//         this.parameters = new Parameters(this, spec.parameters);
-//         this.stages = {};
-//         this.props = {};
-//         entries(specStages).forEach(([stageKey, stageSpec]) => {
-//             this.stages[stageKey] = new Stage(this, stageKey, stageSpec);
-//         });
-//     }
-
-//     
-
-
-    
-// }

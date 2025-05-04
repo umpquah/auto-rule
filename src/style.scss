@@ -71,4 +71,9 @@ $corner-radius: 1rem;
     &.timer {
         padding-top: 0;
     }
+
+    &.buttons {
+        display: flex;
+        justify-content: space-around;
+    }
 }

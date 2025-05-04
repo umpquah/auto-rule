@@ -27,9 +27,6 @@ const App = () => {
                         {error}
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                    <p>{error}</p>
-                </Modal.Body>
             </Modal>
         </>
     );

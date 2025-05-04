@@ -60,8 +60,10 @@ export default class ConfigGroup extends ConfigNode {
     }
 
     get value() {
-        return mapValues(this.groupItems, (v) => v.value);
+        const out = mapValues(this.groupItems, (v) => v.value);
+        // TODO: Handle this more elegantly!
+        if (out.userChoice && !Array.isArray(out.userChoice))
+            throw new AppError(`${this.key}.userChoice`, "value must be an array", "Specification");
+        return out;
     }
-
-    
 }

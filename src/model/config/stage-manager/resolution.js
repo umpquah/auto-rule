@@ -20,7 +20,7 @@ export default class Resolution extends ConfigGroup {
         if (keys(spec).filter(prop => NEED_ONE_OF.includes(prop)).length === 0) {
             throw new AppError(
                 this.key,
-                `Must specify at least one of ${NEED_ONE_OF.join(', ')}`,
+                `Must specify at least one: ${NEED_ONE_OF.join(', ')}`,
                 "Specification",
             );
         }

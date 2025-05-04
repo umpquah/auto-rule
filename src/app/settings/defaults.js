@@ -68,19 +68,29 @@ const generateDefaultSpecs = ({
                 next: "decide",
             },
         },
+        // decide: {
+        //     title: decideTitle,
+        //     description: "Next, you get...",
+        //     preamble: { content: "", confirm: "Continue"},
+        //     parameters: [
+        //         {
+        //             getReward: { chance: 0.5 },
+        //             options: { literal: optionOutcomes },
+        //         },
+        //     ],
+        //     resolution: {
+        //         announce: { expr: "getReward ? options[0] : options[1]" },
+        //         next: { expr: "getReward ? 'reward' : 'penalty'" },
+        //     }
+        // },
         decide: {
             title: decideTitle,
-            description: "Next, you get...",
-            preamble: { content: "", confirm: "Continue"},
-            parameters: [
-                {
-                    getReward: { chance: 0.5 },
-                    options: { literal: optionOutcomes },
+            description: "You decide: You get...",
+            branching: { 
+                literal: {
+                    [optionTitles[0]]: { announce: optionOutcomes[0], next: "reward" },
+                    [optionTitles[1]]: { announce: optionOutcomes[1], next: "penalty" },
                 },
-            ],
-            resolution: {
-                announce: { expr: "getReward ? options[0] : options[1]" },
-                next: { expr: "getReward ? 'reward' : 'penalty'" },
             }
         },
         reward: {
