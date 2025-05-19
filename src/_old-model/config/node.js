@@ -1,5 +1,5 @@
 
-import AppError from "../error";
+import AppError from "../../error";
 import Environment from "../environment";
 
 // Base node type for configuration graph
@@ -10,7 +10,7 @@ export default class ConfigNode {
         parent,
         name,
         spec, 
-        { forkEnvironment = false, intermediateKey = "" } = {},
+        { intermediateKey = "", ownEnvironment = false } = {},
     ) {
         this.name = name;
         const parentKeys = parent?._keyPath ?? [];
@@ -20,14 +20,15 @@ export default class ConfigNode {
         if (name) {
             this._keyPath.push(name)
         }
+        
         if (!parent) {
             this.environment = new Environment();
+        } else if (ownEnvironment) {
+            this.environment = new Environment(parent.environment);
+        } else {
+            this.environment = parent.environment
         }
-        else {
-            const parentEnvironment = parent.environment;
-            this.environment = forkEnvironment ? parentEnvironment.fork() : parentEnvironment;
-        }
-        if (spec !== undefined) {
+        if (spec) {
             this._validateSpec(spec);
             this._loadSpec(spec);
         }

@@ -13,11 +13,14 @@ const SAMPLE_SETTINGS = {
             description: "Wait a certain amount of time",
             preamble: { content: "We will now determine wait time.", confirm: "Continue" },
             parameters: { 
-                time: { range: [1, 2], units: ["minute"] },
+                time: { value: [1, 2], units: ["minute"] },
             },
             resolution: {
-                announce: { exprString: "You will wait [${time$display}]." },
-                wait: { duration: { expr: "time * secondsMultiplier" }, hidden: false },
+                announce: ">$ You will wait ${display(time)}." },
+                wait: { 
+                    duration: ">> time * secondsMultiplier",
+                    hidden: false ,
+                },
                 next: "decide",
             },
         },
@@ -26,8 +29,8 @@ const SAMPLE_SETTINGS = {
             description: "Deciding reward or penalty...",
             parameters: [
                 {
-                    outcomes: { literal: ["reward", "penalty"] },
-                    getReward: { chance: 0.4 },
+                    outcomes: ["reward", "penalty"],
+                    getReward: ">> chance(0.4)",
                 },
                 {
                     outcome: { expr: "getReward ? outcomes[0] : outcomes[1]" }
@@ -76,4 +79,4 @@ const SAMPLE_SETTINGS = {
     },
 };
 
-export const DEFAULT_SETTINGS_JSON = JSON.stringify(DEFAULT_SETTINGS);
+export const DEFAULT_SETTINGS_JSON = JSON.stringify(SAMPLE_SETTINGS);

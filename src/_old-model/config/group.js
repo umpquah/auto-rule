@@ -1,6 +1,6 @@
 import { assign, entries, keys, mapValues, omit, pick } from "lodash";
 
-import AppError from "../error";
+import AppError from "../../error";
 import ConfigNode from "./node";
 import VariableBuilder from "./variable/builder";
 
@@ -52,6 +52,7 @@ export default class ConfigGroup extends ConfigNode {
     _buildAndAdd(spec) {
         let items = {};
         const variableGroupList = VariableBuilder.fromSpecs(this, spec);
+        // TODO: Fork environments the right way
         variableGroupList.forEach((variableGroup) => {
             this.environment.add(this, variableGroup);
             assign(items, variableGroup);

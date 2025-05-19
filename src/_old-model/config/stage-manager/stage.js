@@ -1,5 +1,5 @@
 import { keys } from "lodash";
-import AppError from "../../error";
+import AppError from "../../../error";
 import ConfigGroup from "../group";
 import Confirmable from "./confirmable";
 import Parameters from "./parameters";
@@ -36,7 +36,6 @@ export default class Stage extends ConfigGroup {
 
     refresh() {
         this.environment.applyToAll((v) => v.refresh());
-        console.dir(this.environment);
     }
 
     get value() {

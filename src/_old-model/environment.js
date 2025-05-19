@@ -1,5 +1,5 @@
 import { assign, entries, keys, values } from "lodash";
-import AppError from "./error";
+import AppError from "../error";
 
 
 /**
@@ -8,20 +8,21 @@ import AppError from "./error";
  * from an old one and basic validation.
  */
 export default class Environment {
-    constructor(bindings = {}) {
-        this.bindings = bindings;
+    constructor(enclosingEnvironment = null) {
+      if (enclosingEnvironment)
+        this.bindings = {...enclosingEnvironment.bindings};
+      else
+        this.bindings = {};
     }
 
     get names() {
         return keys(this.bindings);
     }
 
-    get objects() {
-        return values(this.bindings);
-    }
-
-    fork() {
-        return new Environment({...this.bindings});
+    get values() {
+        return this.names.map(
+            (name) => this.bindings[name].value
+        );
     }
 
     _validateName(parent, name) {
@@ -41,15 +42,15 @@ export default class Environment {
         entries(group).forEach(([name, object]) => {
             this._validateName(parent, name);
             groupBindings[name] = object;
-            if (typeof object["wasAddedToEnvironment"] === "function") {
-                object.wasAddedToEnvironment(this);
-            }
+            // if (typeof object["wasAddedToEnvironment"] === "function") {
+            //     object.wasAddedToEnvironment(this);
+            // }
         });
         assign(this.bindings, groupBindings);
         return groupBindings;
     }
 
     applyToAll(func) {
-        this.objects.forEach((obj) => { func(obj) });
+        values(this.bindings).forEach((obj) => { func(obj) });
     }
 }
