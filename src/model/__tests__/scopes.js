@@ -1,7 +1,6 @@
-import { Scope } from "../scope/scope";
 import AppError from "../error";
-import EntityBuilder from "../entity/builder";
-import GlobalScope from "../scope/global";
+import { EntityBuilder } from "../entity";
+import { GlobalScope, Scope } from "../scope";
 
 describe("scope tests", () => {
   test("test scope functionality", () => {

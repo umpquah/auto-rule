@@ -1,17 +1,17 @@
-import GlobalScope from "../scope/global";
-import Entity from "../entity/base";
-import Parameters from "../entity/parameters";
 import AppError from "../error";
+import { Entity, NameDeclarations } from "../entity";
+import { GlobalScope } from "../scope"
 
 describe("parameter tests", () => {
   let globalScope;
   let stage = new Entity("stageA", null);
+
   beforeEach(() => {
     globalScope = new GlobalScope();
   });
 
   test("test parameter group", () => {
-    const params = new Parameters(
+    const params = new NameDeclarations(
       "parameters",
       {
         a: 42,
@@ -37,12 +37,12 @@ describe("parameter tests", () => {
   });
 
   test("test parameters with bad spec", () => {
-    const badSpec = () => { return new Parameters("parameters", 1234); };
+    const badSpec = () => { return new NameDeclarations("parameters", 1234); };
     expect(badSpec).toThrow(AppError);
   });
 
   test("test parameter group cannot reference internally", () => {
-    const params = new Parameters(
+    const params = new NameDeclarations(
       "parameters",
       {
         a: 42,
@@ -55,7 +55,7 @@ describe("parameter tests", () => {
   });
 
   test("test parameters in list of groups", () => {
-    const params = new Parameters(
+    const params = new NameDeclarations(
       "parameters",
       [
         {
@@ -89,7 +89,7 @@ describe("parameter tests", () => {
   });
 
    test("test parameters in list cannot be out of order", () => {
-    const params = new Parameters(
+    const params = new NameDeclarations(
       "parameters",
       [
         {

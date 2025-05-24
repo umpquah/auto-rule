@@ -1,6 +1,6 @@
 import AppError from "../error";
 
-export class Scope {
+export default class Scope {
   constructor(enclosingScope = null) {
     this._enclosingScope = enclosingScope;
     this._entityMap = new Map();

@@ -1,5 +1,5 @@
 import { map } from "lodash";
-import Entity from "./base";
+import { Entity } from ".";
 
 export class Literal extends Entity {
   _loadSpec(spec) {

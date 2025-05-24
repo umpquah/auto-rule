@@ -1,15 +1,14 @@
 import { keys } from "lodash";
-import AppError from "../../../error";
-import ConfigGroup from "../group";
-import Confirmable from "./confirmable";
-import Wait from "./wait";
+import AppError from "../error";
+import { Confirmable, StructuredEntity, Wait } from "../entity";
+
 
 const NEED_ONE_OF = ["announce", "action", "wait"];
 
-export default class Resolution extends ConfigGroup {
-    static requiredProperties = ["next"];
-    static optionalProperties = ["announce", "action", "wait", "clearBeforeNext"];
-    static subConfigs = {
+export default class Resolution extends StructuredEntity {
+    static requiredProps = ["next"];
+    static optionalProps = ["announce", "action", "wait", "clearBeforeNext"];
+    static subEntityTypes = {
         wait: Wait,
         action: Confirmable,
     };

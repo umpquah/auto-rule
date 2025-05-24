@@ -1,7 +1,11 @@
-import { Literal, Expression, StringExpression } from "../entity/expression"
-import NestedEntity from "../entity/nested";
-import EntityBuilder from "../entity/builder";
 import AppError from "../error";
+import { 
+  Literal,
+  EntityBuilder,
+  Expression,
+  NestedEntity,
+  StringExpression,
+} from "../entity";
 
 describe("entity tests", () => {
   test('test literals', () => {

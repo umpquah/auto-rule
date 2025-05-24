@@ -1,11 +1,9 @@
-import AppError from "../error";
-import Entity from "./base";
-import EntityBuilder from "./builder";
 import { mapValues, values } from "lodash";
+import { Entity, EntityBuilder } from ".";
 
 export default class NestedEntity extends Entity {
   static validators = [
-    (spec) => (typeof spec === "object") || "spec format must be {...}",
+    (spec) => (typeof spec === "object") || "format must be {...}",
   ];
 
   _loadSpec(spec) {

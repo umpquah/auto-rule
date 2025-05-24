@@ -10,7 +10,7 @@ const EXACTLY_ONE_OF = ["resolution", "branching"];
 
 export default class Stage extends ConfigGroup {
     static requiredProperties = ["title"];
-    static optionalProperties = ["description", "preamble", "parameters", "resolution", "branching"];
+    static optionalProperties = ["description", "preamble", "parameters", "resolution""];
 
     static subConfigs = {
         parameters: Parameters,

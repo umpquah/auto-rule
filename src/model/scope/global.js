@@ -1,7 +1,6 @@
 import { entries } from "lodash";
-import { Scope } from "./scope";
-import { Literal } from "../entity/expression";
-import Entity from "../entity/base";
+import { Literal } from "../entity";
+import Scope from "./scope";
 
 const _range = (min, max) => {
   if (!(Number.isInteger(min) && Number.isInteger(max)))
@@ -34,9 +33,8 @@ const BUILTINS = {
 export default class GlobalScope extends Scope {
   constructor() {
     super();
-    const builtin_parent = new Entity("<builtin>");
     entries(BUILTINS).forEach(([name, fn]) => {
-      this.addOne(name, new Literal(name, fn, builtin_parent));
+      this.addOne(name, new Literal(name, fn, null));
     });
   }
 }

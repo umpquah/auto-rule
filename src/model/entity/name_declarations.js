@@ -2,7 +2,7 @@ import { assign, mapValues, size } from "lodash";
 import EntityBuilder from "./builder";
 import NestedEntity from "./nested";
 
-export default class Parameters extends NestedEntity {
+export default class NameDeclarations extends NestedEntity {
   // ParameterGroup is special case of NestedEntity.
   // After loading and validating, the components are also
   // added to an inner scope, which is then returned
@@ -26,17 +26,14 @@ export default class Parameters extends NestedEntity {
     const groupComponents = mapValues(spec, (value, key) => 
       EntityBuilder.fromAnnotatedSpec(key, value, this, scope)
     );
-    console.log("groupComponents are now:", groupComponents);
     const innerScope = scope.createInnerScope();
     innerScope.add(groupComponents);
     assign(this._components, groupComponents);
-    console.log("innerScope names are now:", innerScope.names);
     return innerScope;
   }
 
   _loadListSpec(spec, scope) {
     let lastScope = scope;
-    console.log("lastScope names:", lastScope.names);
     spec.forEach((groupSpec) => {
       lastScope = this._loadGroupSpec(groupSpec, lastScope);
     });
