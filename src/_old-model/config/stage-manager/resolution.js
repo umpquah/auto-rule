@@ -1,9 +1,8 @@
 import { keys } from "lodash";
+import AppError from "../../../error";
 import ConfigGroup from "../group";
 import Confirmable from "./confirmable";
 import Wait from "./wait";
-
-import AppError from "../../../error";
 
 const NEED_ONE_OF = ["announce", "action", "wait"];
 

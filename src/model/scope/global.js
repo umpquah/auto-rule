@@ -20,7 +20,7 @@ const _chance = (probability) => {
 }
 
 const _select = (options) => {
-  if (!Array.isArray(spec) || spec.length === 0)
+  if (!Array.isArray(options) || options.length === 0)
     throw new TypeError("must be a non-empty array");
   return options[Math.floor(Math.random() * options.length)];
 }
@@ -36,7 +36,7 @@ export default class GlobalScope extends Scope {
     super();
     const builtin_parent = new Entity("<builtin>");
     entries(BUILTINS).forEach(([name, fn]) => {
-      this.addEntity(name, new Literal(name, fn, builtin_parent));
+      this.addOne(name, new Literal(name, fn, builtin_parent));
     });
   }
 }

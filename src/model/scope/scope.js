@@ -2,14 +2,20 @@ import AppError from "../error";
 
 export class Scope {
   constructor(enclosingScope = null) {
-    this.enclosingScope = enclosingScope;
+    this._enclosingScope = enclosingScope;
     this._entityMap = new Map();
   }
 
-  addEntity(name, entity) {
+  addOne(name, entity) {
     if (this.names.has(name)) 
-      throw new AppError(entity.key, `Name '${name}' already used in this scope`, "Scope");
+      throw new AppError(entity.key, `Name '${name}' already used`, "Scope");
     this._entityMap.set(name, entity);
+  }
+
+  add(entityMap) {
+    Object.entries(entityMap).forEach(([name, entity]) => {
+      this.addOne(name, entity);
+    });
   }
 
   get innermostNames() {
@@ -21,14 +27,18 @@ export class Scope {
   }
 
   get names() {
-    return this.enclosingScope
-      ? new Set([...this.innermostNames, ...this.enclosingScope.names])
+    return this._enclosingScope
+      ? new Set([...this.innermostNames, ...this._enclosingScope.names])
       : this.innermostNames;
   }
 
   get entities() {
-    return this.enclosingScope
-      ? new Set([...this.innermostEntities, ...this.enclosingScope.entities]) 
+    return this._enclosingScope
+      ? new Set([...this.innermostEntities, ...this._enclosingScope.entities]) 
       : this.innermostEntities;
+  }
+
+  createInnerScope() {
+    return new Scope(this);
   }
 }

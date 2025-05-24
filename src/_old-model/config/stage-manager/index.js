@@ -1,8 +1,9 @@
 import { cloneDeep } from "lodash";
+import AppError from "../../error";
 import Stages from "./stages";
 import ConfigGroup from "../group";
 import Parameters from "./parameters";
-import AppError from "../../error";
+
 
 export default class StageManager extends ConfigGroup {
     static requiredProperties = ["initialStage", "stages"];

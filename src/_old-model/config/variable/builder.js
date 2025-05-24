@@ -1,6 +1,5 @@
-import { entries, keys, map } from "lodash";
-
 import AppError from "../../../error";
+import { entries, keys, map } from "lodash";
 
 import { Expression, ExpressionString, ExpressionWithUnits } from "./expression";
 import Literal from "./literal";

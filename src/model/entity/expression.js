@@ -2,7 +2,7 @@ import { map } from "lodash";
 import Entity from "./base";
 
 export class Literal extends Entity {
-  loadSpec(spec) {
+  _loadSpec(spec) {
     this._value = spec;
   }
 
@@ -12,7 +12,7 @@ export class Literal extends Entity {
 }
 
 export class Expression extends Entity {
-  loadSpec(spec) {
+  _loadSpec(spec) {
     this._fn = new Function(...this.scope.names, "return " + spec + ";"); 
     this._value = undefined;
   }

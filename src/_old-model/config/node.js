@@ -28,7 +28,7 @@ export default class ConfigNode {
         } else {
             this.environment = parent.environment
         }
-        if (spec) {
+        if (spec !== undefined) {
             this._validateSpec(spec);
             this._loadSpec(spec);
         }

@@ -1,15 +1,16 @@
+import AppError from "../error";
 import Entity from "./base";
 import EntityBuilder from "./builder";
-import AppError from "../error";
 import { mapValues, values } from "lodash";
 
 export default class NestedEntity extends Entity {
-  loadSpec(spec) {
-    if (!(typeof spec === "object")) {
-      throw new AppError(this.key, "Nested entity spec must be an object");
-    }
+  static validators = [
+    (spec) => (typeof spec === "object") || "spec format must be {...}",
+  ];
+
+  _loadSpec(spec) {
     this._components = mapValues(spec, (value, key) => 
-      EntityBuilder.fromAnnotatedSpec(key, value, this)
+      EntityBuilder.fromAnnotatedSpec(key, value, this, this.scope)
     );
   }   
 
