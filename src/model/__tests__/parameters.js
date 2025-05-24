@@ -1,15 +1,8 @@
 import AppError from "../error";
-import { Entity, NameDeclarations } from "../entity";
-import { GlobalScope } from "../scope"
+import { NameDeclarations } from "../entity";
+import Scope from "../scope"
 
 describe("parameter tests", () => {
-  let globalScope;
-  let stage = new Entity("stageA", null);
-
-  beforeEach(() => {
-    globalScope = new GlobalScope();
-  });
-
   test("test parameter group", () => {
     const params = new NameDeclarations(
       "parameters",
@@ -18,14 +11,14 @@ describe("parameter tests", () => {
         b: "=range(17, 17)",
         c: "=select(['cake'])"
       },
-      stage,
-      globalScope,
+      null,
+      Scope.globalScope,
     );
-    expect(params.key).toBe("stageA.parameters");
+    expect(params.key).toBe("<top>.parameters");
     const vars = params._components;
-    expect(vars["a"].key).toBe("stageA.parameters.a");
-    expect(vars["b"].key).toBe("stageA.parameters.b");
-    expect(vars["c"].key).toBe("stageA.parameters.c");
+    expect(vars["a"].key).toBe("parameters.a");
+    expect(vars["b"].key).toBe("parameters.b");
+    expect(vars["c"].key).toBe("parameters.c");
     expect(vars["a"].value).toBe(42);
     expect(vars["b"].value).toBe(17);
     expect(vars["c"].value).toBe("cake");
@@ -48,8 +41,8 @@ describe("parameter tests", () => {
         a: 42,
         b: "=a * 10",
       },
-    stage,
-    globalScope,
+      null,
+      Scope.globalScope,
     );
     expect(() => { return params.value }).toThrow(ReferenceError);
   });
@@ -71,8 +64,8 @@ describe("parameter tests", () => {
           f: "=d / a",
         }
       ],
-      stage,
-      globalScope,
+      null,
+      Scope.globalScope,
     );
     expect(params.value).toEqual({
       a: 6,
@@ -84,8 +77,8 @@ describe("parameter tests", () => {
     });
     expect(params.value.d).toBe(42);
     expect(params.value.f).toBe(7);
-    expect(params._components.a.key).toBe("stageA.parameters.a");
-    expect(params._components.f.key).toBe("stageA.parameters.f");
+    expect(params._components.a.key).toBe("parameters.a");
+    expect(params._components.f.key).toBe("parameters.f");
   });
 
    test("test parameters in list cannot be out of order", () => {
@@ -101,8 +94,8 @@ describe("parameter tests", () => {
           b: 7,
         },
       ],
-      stage,
-      globalScope,
+      null,
+      Scope.globalScope,
     );
     expect(() => params.value.c).toThrow(ReferenceError);
   });

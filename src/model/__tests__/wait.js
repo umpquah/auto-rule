@@ -1,14 +1,8 @@
 import { Entity } from "../entity";
-import { GlobalScope } from "../scope"
+import Scope from "../scope"
 import { Wait } from "../config";
 
 describe("wait tests", () => {
-  let globalScope;
-  let stage = new Entity("stageA", null);
-  beforeEach(() => {
-    globalScope = new GlobalScope();
-  });
-  
   test("test wait specs", () => {
     const wait = new Wait(
       "wait",
@@ -16,10 +10,10 @@ describe("wait tests", () => {
         duration: 99,
         hidden: true,
       },
-      stage,
-      globalScope,
+      null,
+      Scope.globalScope,
     );
-    expect(wait.key).toBe("stageA.wait");
+    expect(wait.key).toBe("<top>.wait");
     expect(wait.value).toEqual(
       {
         duration: 99,
@@ -33,8 +27,8 @@ describe("wait tests", () => {
       new Wait(
         "wait",
         { hidden: false},
-        stage,
-        globalScope
+        null,
+        Scope.globalScope
       );
     }).toThrow("missing required 'duration' entry");
   });

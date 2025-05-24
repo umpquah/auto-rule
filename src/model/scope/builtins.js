@@ -1,7 +1,3 @@
-import { entries } from "lodash";
-import { Literal } from "../entity";
-import Scope from "./scope";
-
 const _range = (min, max) => {
   if (!(Number.isInteger(min) && Number.isInteger(max)))
     throw new TypeError("must be integers");
@@ -30,11 +26,4 @@ const BUILTINS = {
   "select": _select,
 }
 
-export default class GlobalScope extends Scope {
-  constructor() {
-    super();
-    entries(BUILTINS).forEach(([name, fn]) => {
-      this.addOne(name, new Literal(name, fn, null));
-    });
-  }
-}
+export default BUILTINS;

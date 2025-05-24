@@ -1,5 +1,5 @@
 import AppError from "../error";
-import { Scope } from "../scope";
+import Scope from "../scope";
 
 export default class Entity {
   static validators = [];

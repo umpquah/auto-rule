@@ -1,6 +1,6 @@
 import AppError from "../error";
 import { EntityBuilder } from "../entity";
-import { GlobalScope, Scope } from "../scope";
+import Scope from "../scope";
 
 describe("scope tests", () => {
   test("test scope functionality", () => {
@@ -22,18 +22,17 @@ describe("scope tests", () => {
   });
 
   test("test expressions with scopes", () => {
-    const s = new GlobalScope();
     const a = EntityBuilder.fromAnnotatedSpec("basePrice", "= 15 + 15");
-    s.addOne("basePrice", a);
+    Scope.globalScope.addOne("basePrice", a);
     expect(a.value).toBe(30);
 
     const b = EntityBuilder.fromAnnotatedSpec("tax", "= 0.2 * basePrice");
     expect(() => { return b.value }).toThrow(ReferenceError)
     
-    const c = EntityBuilder.fromAnnotatedSpec("tax", "= 0.2 * basePrice", null, s);
+    const c = EntityBuilder.fromAnnotatedSpec("tax", "= 0.2 * basePrice", null, Scope.globalScope);
     expect(c.value).toBe(6);  
 
-    const d = EntityBuilder.fromAnnotatedSpec("marbles", "= range(1, 5)", null, s);
+    const d = EntityBuilder.fromAnnotatedSpec("marbles", "= range(1, 5)", null, Scope.globalScope);
     for (let i = 0; i < 100; i++) {
       d.refresh();
       expect(d.value).toBeLessThanOrEqual(5);

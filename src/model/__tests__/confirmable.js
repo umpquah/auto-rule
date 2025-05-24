@@ -1,14 +1,8 @@
 import { Confirmable } from "../config";
-import { GlobalScope }  from "../scope";
 import { Entity } from "../entity";
+import Scope from "../scope";
 
 describe("confirmable tests", () => {
-  let globalScope;
-  let stage = new Entity("stageA", null);
-  beforeEach(() => {
-    globalScope = new GlobalScope();
-  });
-  
   test("test confirmable specs", () => {
     const confirmable = new Confirmable(
       "action",
@@ -16,10 +10,10 @@ describe("confirmable tests", () => {
         content: "Are you sure?",
         confirm: "yes",
       },
-        stage,
-        globalScope
+        null,
+        Scope.globalScope
       );
-    expect(confirmable.key).toBe("stageA.action");
+    expect(confirmable.key).toBe("<top>.action");
     expect(confirmable.value).toEqual({
       content: "Are you sure?",
       confirm: "yes",
@@ -28,10 +22,10 @@ describe("confirmable tests", () => {
     const confirmable2 = new Confirmable(
       "prepare",
       "Get ready",
-      stage,
-      globalScope,
+      null,
+      Scope.globalScope,
     );
-    expect(confirmable2.key).toBe("stageA.prepare");
+    expect(confirmable2.key).toBe("<top>.prepare");
     expect(confirmable2.value).toEqual({
       content: "Get ready",
     });
@@ -42,8 +36,8 @@ describe("confirmable tests", () => {
       new Confirmable(
         "action",
         { confirm: "Ok"},
-        stage,
-        globalScope
+        null,
+        Scope.globalScope,
       );
     }).toThrow("missing required 'content' entry");
 
@@ -51,8 +45,8 @@ describe("confirmable tests", () => {
       new Confirmable(
         "action",
         { content: "Do the thing", extra: "extra"},
-        stage,
-        globalScope
+        null,
+        Scope.globalScope,
       );
     }).toThrow("'extra' not allowed here");
   });
