@@ -2,7 +2,7 @@ import { assign, mapValues, size } from "lodash";
 import EntityBuilder from "./builder";
 import NestedEntity from "./nested";
 
-export default class NameDeclarations extends NestedEntity {
+export default class Bindings extends NestedEntity {
   // ParameterGroup is special case of NestedEntity.
   // After loading and validating, the components are also
   // added to an inner scope, which is then returned
@@ -10,7 +10,7 @@ export default class NameDeclarations extends NestedEntity {
     (spec) => (
       Array.isArray(spec) && spec.length > 0
       || typeof spec === "object" && size(spec) > 0
-      || "must be non-empty array or object"
+      || "must be non-empty {...} or [...]"
     )
   ];
 

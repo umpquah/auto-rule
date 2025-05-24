@@ -1,11 +1,6 @@
-import AppError from "../error";
-import { 
-  Literal,
-  EntityBuilder,
-  Expression,
-  NestedEntity,
-  StringExpression,
-} from "../entity";
+import EntityBuilder from "../builder";
+import { Expression, Literal, StringExpression  }from "../expression";
+import NestedEntity from "../nested";
 
 describe("entity tests", () => {
   test('test literals', () => {
@@ -49,7 +44,7 @@ describe("entity tests", () => {
 
   test('test nested specs', () => {
     const badSpec = () => { return new NestedEntity("foo", ""); };
-    expect(badSpec).toThrow(AppError);
+    expect(badSpec).toThrow("foo: format must be {...}");
     const nested = new NestedEntity(
       "game",
       {

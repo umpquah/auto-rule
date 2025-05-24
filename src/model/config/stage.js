@@ -1,18 +1,14 @@
-import { NameDeclarations, StructuredEntity, Wait } from "../entity";
-import { Confirmable, Resolution } from "."
+import Confirmable from "./confirmable";
+import Resolution from "./resolution";
+import StructuredWithParams from "./withparams";
 
-export default class Stage extends StructuredEntity {
+export default class Stage extends StructuredWithParams {
   static requiredProps = ["title"];
-  static optionalProps = ["description", "preamble", "parameters", "resolution"];
-  static subEntityTypes = {
-      wait: Wait,
-      action: Confirmable,
-  };
-  constructor(name, spec, parent, scope){
-    super(name, Confirmable._adaptSpec(spec), parent, scope)
-  }
+  static optionalProps = ["description", "parameters", "preamble", "resolution"];
 
-  static _adaptSpec(spec) {
-    return (typeof spec === "object") ? spec : { content: spec };
-  }
+  static subEntityTypes = {
+    preamble: Confirmable,
+    resolution: Resolution,
+  };
 }
+

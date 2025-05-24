@@ -1,9 +1,8 @@
-import { Confirmable } from "../config";
-import { Entity } from "../entity";
-import Scope from "../scope";
+import Confirmable from "../confirmable";
+import Scope from "../../scope/scope";
 
-describe("confirmable tests", () => {
-  test("test confirmable specs", () => {
+describe("Confirmable tests", () => {
+  test("test Confirmable specs", () => {
     const confirmable = new Confirmable(
       "action",
       {
@@ -31,7 +30,7 @@ describe("confirmable tests", () => {
     });
   });
 
-  test("test confirmable bad specs", () => {
+  test("test Confirmable bad specs", () => {
     expect(() => {
       new Confirmable(
         "action",
@@ -39,7 +38,7 @@ describe("confirmable tests", () => {
         null,
         Scope.globalScope,
       );
-    }).toThrow("missing required 'content' entry");
+    }).toThrow("action: missing required 'content' entry");
 
     expect(() => {
       new Confirmable(
@@ -48,6 +47,6 @@ describe("confirmable tests", () => {
         null,
         Scope.globalScope,
       );
-    }).toThrow("'extra' not allowed here");
+    }).toThrow("action: 'extra' not allowed here");
   });
 });

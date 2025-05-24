@@ -1,9 +1,8 @@
-import { Entity } from "../entity";
-import Scope from "../scope"
-import { Wait } from "../config";
+import Scope from "../../scope/scope"
+import Wait from "../wait";
 
-describe("wait tests", () => {
-  test("test wait specs", () => {
+describe("Wait tests", () => {
+  test("test Wait specs", () => {
     const wait = new Wait(
       "wait",
       {
@@ -22,14 +21,14 @@ describe("wait tests", () => {
     );
   });
 
-  test("test wait bad specs", () => {
+  test("test Wait with bad specs", () => {
     expect(() => {
       new Wait(
         "wait",
-        { hidden: false},
+        { hidden: false },
         null,
         Scope.globalScope
       );
-    }).toThrow("missing required 'duration' entry");
+    }).toThrow("wait: missing required 'duration' entry");
   });
 });

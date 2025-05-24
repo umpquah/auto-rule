@@ -1,5 +1,6 @@
 import { mapValues, values } from "lodash";
-import { Entity, EntityBuilder } from ".";
+import Entity from "./base";
+import EntityBuilder from "./builder"
 
 export default class NestedEntity extends Entity {
   static validators = [

@@ -1,10 +1,9 @@
-import AppError from "../error";
-import { NameDeclarations } from "../entity";
-import Scope from "../scope"
+import Bindings from "../../entity/bindings";
+import Scope from "../../scope/scope";
 
-describe("parameter tests", () => {
-  test("test parameter group", () => {
-    const params = new NameDeclarations(
+describe("Bindings tests", () => {
+  test("test Bindings with single group", () => {
+    const params = new Bindings(
       "parameters",
       {
         a: 42,
@@ -29,13 +28,13 @@ describe("parameter tests", () => {
     });
   });
 
-  test("test parameters with bad spec", () => {
-    const badSpec = () => { return new NameDeclarations("parameters", 1234); };
-    expect(badSpec).toThrow(AppError);
+  test("test Bindings with bad spec", () => {
+    const badSpec = () => { return new Bindings("parameters", 1234); };
+    expect(badSpec).toThrow("parameters: must be non-empty {...} or [...]");
   });
 
-  test("test parameter group cannot reference internally", () => {
-    const params = new NameDeclarations(
+  test("test Bindings group cannot reference internally", () => {
+    const params = new Bindings(
       "parameters",
       {
         a: 42,
@@ -47,8 +46,8 @@ describe("parameter tests", () => {
     expect(() => { return params.value }).toThrow(ReferenceError);
   });
 
-  test("test parameters in list of groups", () => {
-    const params = new NameDeclarations(
+  test("test Bindings with list of groups", () => {
+    const params = new Bindings(
       "parameters",
       [
         {
@@ -81,8 +80,8 @@ describe("parameter tests", () => {
     expect(params._components.f.key).toBe("parameters.f");
   });
 
-   test("test parameters in list cannot be out of order", () => {
-    const params = new NameDeclarations(
+   test("test Bindings groups in list cannot be out of order", () => {
+    const params = new Bindings(
       "parameters",
       [
         {

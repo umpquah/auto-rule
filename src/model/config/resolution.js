@@ -1,29 +1,14 @@
-import { keys } from "lodash";
-import AppError from "../error";
-import { Confirmable, StructuredEntity, Wait } from "../entity";
-
-
-const NEED_ONE_OF = ["announce", "action", "wait"];
+import Confirmable from "./confirmable";
+import Wait from "./wait";
+import { StructuredEntity } from "../entity";
 
 export default class Resolution extends StructuredEntity {
     static requiredProps = ["next"];
     static optionalProps = ["announce", "action", "wait", "clearBeforeNext"];
+    static mutexProps = [["action", "wait"]];
+    static needOneOf = [["announce", "action", "wait"]]
     static subEntityTypes = {
         wait: Wait,
         action: Confirmable,
     };
-
-    _validateSpec(spec) {
-        super._validateSpec(spec);
-        if (keys(spec).filter(prop => NEED_ONE_OF.includes(prop)).length === 0) {
-            throw new AppError(
-                this.key,
-                `Must specify at least one: ${NEED_ONE_OF.join(', ')}`,
-                "Specification",
-            );
-        }
-        if ("action" in spec && "wait" in spec) {
-            throw new AppError(this.key, "cannot have both action and wait", "Specification");
-        }
-    }
 }   

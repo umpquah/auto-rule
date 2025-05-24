@@ -20,10 +20,23 @@ const _select = (options) => {
   return options[Math.floor(Math.random() * options.length)];
 }
 
+const _withUnits = (value, unitOrUnits) => {
+  let singular, plural;
+  if (!(Array).isArray(unitOrUnits)) {
+    singular = unitOrUnits;
+    plural = unitOrUnits + "s"
+  } else {
+    singular = unitOrUnits[0];
+    plural = unitOrUnits.length > 1 ? unitOrUnits[1] : unitOrUnits[0] + "s";
+  }
+  return `${value} ${value === 1 ? singular : plural}`;
+}
+
 const BUILTINS = {
   "range": _range,
   "chance": _chance,
   "select": _select,
+  "withUnits": _withUnits,
 }
 
 export default BUILTINS;

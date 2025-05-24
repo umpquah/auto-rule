@@ -1,5 +1,4 @@
-import AppError from "../error";
-import { EntityBuilder } from "../entity";
+import EntityBuilder from "../../entity/builder";
 import Scope from "../scope";
 
 describe("scope tests", () => {
@@ -18,7 +17,7 @@ describe("scope tests", () => {
     const attemptDuplicate = () => {
       scope.addOne("a", 100);
     };
-    expect(attemptDuplicate).toThrow(AppError)
+    expect(attemptDuplicate).toThrow("name 'a' is already being used");
   });
 
   test("test expressions with scopes", () => {

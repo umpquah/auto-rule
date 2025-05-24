@@ -29,7 +29,7 @@ export default class StageManager extends ConfigGroup {
     _getRefreshedStageForKey(sourceKey, stageKey) {
         const stage = this.stages[stageKey];
         if (!stage)
-            throw new AppError(sourceKey, `No stage with key '${stageKey}'`, "Specification");
+            throw new AppError(sourceKey, `No stage with key '${stageKey}'`);
         stage.refresh();
         return {round: this.round, ...stage.value};
     }

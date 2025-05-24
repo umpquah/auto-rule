@@ -1,5 +1,5 @@
 import { map } from "lodash";
-import { Entity } from ".";
+import Entity from "./base";
 
 export class Literal extends Entity {
   _loadSpec(spec) {
@@ -34,7 +34,7 @@ export class Expression extends Entity {
 }
 
 export class StringExpression extends Expression {
-  constructor(name, spec, parent) {
-    super(name, "`" + spec + "`", parent);
+  constructor(name, spec, parent, scope) {
+    super(name, "`" + spec + "`", parent, scope);
   }
 }

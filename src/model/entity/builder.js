@@ -2,7 +2,7 @@ import { Literal, Expression, StringExpression } from "../entity/expression"
 import NestedEntity from "./nested";
 
 export default class EntityBuilder {
-  static fromAnnotatedSpec(name, spec, parent = null, scope) {
+  static fromAnnotatedSpec(name, spec, parent, scope) {
     if (typeof spec === "string") {
       if (spec.length >= 2 && spec.substring(0, 2) === "=~")
         return new StringExpression(name, spec.replace(/^=~ */, ""), parent, scope);
